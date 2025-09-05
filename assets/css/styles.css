@@ -1,0 +1,354 @@
+html {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--dark-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.main-content {
+  flex: 1 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Page Banner */
+#banner {
+  text-align: center;
+}
+
+/* Theme toggle switch */
+.main-switch {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}
+
+/* Headings and paragraphs */
+h1 {
+  font-size: 2.2em;
+  color: var(--dark-text);
+  overflow-wrap: break-word;
+}
+
+p {
+  font-size: 1.4em;
+  color: var(--dark-text);
+  overflow-wrap: break-word;
+}
+
+/* Main content containers */
+#department-grid,
+#calculator-selection-grid,
+#calculator-logic-container {
+  margin-top: 10em; 
+  padding-top: 0;
+}
+
+/* Modal title */
+#modal-title {
+  font-size: 1.8em;
+  color: var(--dark-text);
+}
+
+.card-modal {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  left: 0; top: 0; width: 100%; height: 100%;
+  background: rgba(24,20,42,0.82);
+  z-index: 1000;
+  margin-top: 10em;
+}
+
+.card-modal-content {
+  background: var(--dark-banner, #3c3361);
+  border-radius: 18px;
+  box-shadow: var(--dark-shadow, 0 2px 18px 1px rgba(44, 27, 74, 0.12));
+  padding: 2em 2.5em;
+  max-width: 400px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  position: relative;
+}
+
+/* Card styles */
+.card {
+  background: var(--card-bg);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  max-width: 80%;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-label {
+  font-size: 1.6em;
+  margin-bottom: 1em;
+}
+
+.card-thumb {
+  max-width: 128px;
+}
+
+/* Liquid glass effect */
+.liquid-glass {
+  min-width: 300px;
+}
+
+/* Hide inactive sections */
+.hidden {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+/* Calculator logic container */
+#calculator-logic-container {
+  padding: 2.5em 2em;
+  background: var(--card-bg);
+  box-shadow: var(--glass-shadow-dark, 0 2px 18px 1px rgba(44, 27, 74, 0.12));
+  max-width: 480px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Calculator title and description */
+#calculator-logic-container h2 {
+  font-size: 2em;
+  color: var(--dark-text);
+  margin-bottom: 0.5em;
+}
+
+#calculator-logic-container p {
+  font-size: 1.2em;
+  color: var(--dark-text);
+  margin-bottom: 2em;
+}
+
+/* Bold main group labels, normal option labels */
+#calculator-logic-container > form > label {
+  font-weight: bold;
+}
+
+.radio-group label,
+.checkbox-group label {
+  font-weight: normal;
+}
+
+/* Input and label styling */
+#calculator-logic-container label {
+  display: block;
+  font-size: 1.1em;
+  color: var(--dark-text);
+  margin-bottom: 0.3em;
+  margin-top: 1.2em;
+  text-align: left;
+}
+
+#calculator-logic-container input[type="number"],
+#calculator-logic-container input[type="text"] {
+  width: 100%;
+  padding: 0.7em 1em;
+  font-size: 1.1em;
+  border-radius: 0.5em;
+  border: 1px solid var(--dark-border, #3c3361);
+  background: var(--light-bg, #f5f2ff);
+  color: var(--light-text);
+  margin-bottom: 0.8em;
+  box-sizing: border-box;
+}
+
+/* Radio and checkbox groups */
+.radio-group,
+.checkbox-group {
+  display: flex;
+  gap: 2em;
+  margin-bottom: 1em;
+  margin-top: 1em;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.radio-group label,
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  font-size: 1em;
+  color: var(--dark-text);
+  cursor: pointer;
+  margin-bottom: 0;
+  gap: 1em;
+  flex-direction: row;
+}
+
+.radio-group input[type="radio"],
+.checkbox-group input[type="checkbox"] {
+  margin-left: 1em;
+  margin-right: 0;
+}
+
+/* Calculator result */
+#calcResult {
+  margin-top: 2em;
+  font-size: 1.2em;
+  color: var(--dark-text);
+  padding: 1em;
+  border-radius: 0.7em;
+  min-height: 2em;
+  width: 100%;
+  box-sizing: border-box;
+  word-break: break-word;
+}
+
+/* Calculator buttons */
+#calculator-logic-container .button {
+  margin-top: 2em;
+  margin-bottom: 1em;
+  width: 100%;
+  font-size: 1.1em;
+  font-weight: bold;
+  padding: 0.8em 0;
+  border-radius: 0.5em;
+}
+
+/* Fine print */
+.fine-print {
+  flex-shrink: 0;
+  color: var(--dark-text);
+  opacity: 0.2;
+  padding-top: 1em;
+  padding-bottom: 1.5em;
+  width: 100%;
+  text-align: center;
+}
+
+/* Responsive styles for vertical phone screens */
+@media (max-width: 600px) {
+  html, body {
+    width: 100vw;
+    max-width: 95vw;
+    overflow-x: hidden;
+  }
+
+  .main-content {
+    width: 100%;
+    padding: 0;
+  }
+
+  #banner {
+    padding: 0.4em 0.5em;
+  }
+
+  h1 {
+    font-size: 1.4em;
+    max-width: 95vw;
+  }
+
+  p {
+    font-size: 1em;
+    max-width: 95vw;
+  }
+
+  #department-grid,
+  #calculator-selection-grid,
+  #calculator-logic-container {
+    margin-top: 8em;
+    padding: 0.5em;
+    max-width: 100vw;
+  }
+
+  .card {
+    max-width: 98vw;
+    margin: 0.5em 0;
+    padding: 1em 0.5em;
+  }
+
+  .card-label {
+    font-size: 1.1em;
+  }
+
+  .card-thumb {
+    max-width: 80px;
+  }
+
+  .card-modal-content {
+    max-width: 98vw;
+    padding: 1.2em 0.5em;
+  }
+
+  #calculator-logic-container {
+    max-width: 90vw;
+    padding: 1.2em 0.5em;
+  }
+
+  #calculator-logic-container h2 {
+    font-size: 1.2em;
+  }
+
+  #calculator-logic-container p {
+    font-size: 1em;
+  }
+
+  #calcResult {
+    font-size: 1em;
+    padding: 0.7em;
+  }
+
+  #calculator-logic-container .button {
+    font-size: 1em;
+    padding: 0.7em 0;
+  }
+
+  .main-switch {
+    display: block;
+    max-width: 20vw;
+    font-size: 0.5em;
+    border-radius: 24px;
+    padding: 0.5em 0.8em;
+    margin-right: 1em;
+  }
+
+  .switch {
+    width: 20px;
+    height: 10px;  
+    margin-right: 10px;
+  }
+
+  .slider:before {
+    height: 8px; width: 8px;
+    left: 1px; bottom: 1px;
+  }
+
+  .switch input:checked + .slider:before {
+    transform: translateX(10px);
+  }
+
+  .fine-print {
+    font-size: 0.8em;
+    padding-top: 0.5em;
+    padding-bottom: 1em;
+  }
+}
