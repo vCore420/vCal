@@ -99,6 +99,7 @@ function enterDepartment(deptKey) {
   backBtn.onclick = function() {
     showSection('department-grid');
     backBtnContainer.remove();
+    window.scrollTo(0, 0); 
   };
   backBtnContainer.appendChild(backBtn);
 
@@ -173,4 +174,5 @@ function openCalculator(calcKey) {
 
 function closeCalculator() {
   showSection('calculator-selection-grid');
+  window.scrollTo(0, 0); 
 }

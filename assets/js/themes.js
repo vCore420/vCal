@@ -1,24 +1,22 @@
 // vCoreUI Theme Toggle
 
 const themeToggle = document.getElementById('themeToggle');
-const themeLabel = document.getElementById('themeLabel');
 
 function setTheme(isLight) {
   document.body.classList.toggle('theme-light', isLight);
-  themeLabel.textContent = isLight ? 'Light Mode' : 'Dark Mode';
 }
 
 themeToggle.addEventListener('change', function() {
-  setTheme(this.checked);
+  setTheme(this.checked); 
+  localStorage.setItem('theme', this.checked ? 'light' : 'dark');
 });
 
-// Remembers choice across page reloads
-if (localStorage.getItem('theme') === 'light') {
+// On page load, set theme from localStorage
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'light') {
   themeToggle.checked = true;
   setTheme(true);
+} else {
+  themeToggle.checked = false;
+  setTheme(false);
 }
-
-themeToggle.addEventListener('change', function() {
-  localStorage.setItem('theme', this.checked ? 'light' : 'dark');
-  setTheme(this.checked);
-});

@@ -28,13 +28,6 @@ body {
   text-align: center;
 }
 
-/* Theme toggle switch */
-.main-switch {
-  position: absolute;
-  top: 1em;
-  right: 1em;
-}
-
 /* Headings and paragraphs */
 h1 {
   font-size: 2.2em;
@@ -272,6 +265,66 @@ p {
     max-width: 95vw;
   }
 
+  .theme-switch {
+    top: 1.2em;
+    right: 1.2em;
+    width: 60px;
+    height: 28px;
+  }
+  .switch-track {
+    width: 60px;
+    height: 28px;
+    border-radius: 16px;
+  }
+  .switch-knob {
+    width: 18px;
+    height: 18px;
+    top: 3.5px;
+    left: 5px;
+    box-shadow:
+      0 1px 4px 0 rgba(44, 27, 74, 0.12),
+      0 0.5px 2px 0 rgba(44, 27, 74, 0.08);
+  }
+  .knob-img {
+    box-shadow: 0 0 4px 1px #b3b3cc;
+  }
+  .switch-track input:checked ~ .switch-knob {
+    left: 36px;
+  }
+  .switch-bg {
+    border-radius: 16px;
+  }
+
+  .star1 {
+    width: 2px; height: 2px;
+    left: 44px; top: 10px;
+  }
+  .star2 {
+    width: 2.5px; height: 2.5px;
+    left: 32px; top: 8px;
+  }
+  .star3 {
+    width: 1.5px; height: 1.5px;
+    left: 38px; top: 4px;
+  }
+  .star4 {
+    width: 1px; height: 1px;
+    left: 48px; top: 18px;
+  }
+  .star5 {
+    width: 2px; height: 2px;
+    left: 52px; top: 12px;
+  }
+  .star6 {
+    width: 1.5px; height: 1.5px;
+    left: 37px; top: 18px;
+  }
+  .star7 {
+    width: 1px; height: 1px;
+    left: 26px; top: 3px;
+  }
+
+
   #department-grid,
   #calculator-selection-grid,
   #calculator-logic-container {
@@ -330,7 +383,7 @@ p {
     padding: 0.5em 0.8em;
     margin-right: 1em;
   }
-
+  /*
   .switch {
     width: 20px;
     height: 10px;  
@@ -345,7 +398,7 @@ p {
   .switch input:checked + .slider:before {
     transform: translateX(10px);
   }
-
+*/
   .fine-print {
     font-size: 0.8em;
     padding-top: 0.5em;
