@@ -72,13 +72,112 @@ const textContent = {
         },
         // ...add calculators for Installer
       ]
+    },
+    {
+      key: "product",
+      name: "Product Info",
+      preview: "Useful information about our products.",
+      product: [
+        {
+            key: "doors",
+            name: "Doors",
+            synopsis: "Information about all Lifestyle and Crim doors and windows.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Lifestyle and Crim doors are designed for security and aesthetics. Available in multiple finishes."
+              },
+              {
+                heading: "Lifestyle Door info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Crimsafe Door info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              }
+              // Add more sections as needed
+            ]
+        },
+        {
+            key: "sliders",
+            name: "Sliders",
+            synopsis: "Information about all Lifestyle and Crim Sliders."
+        },
+        {
+            key: "inswings",
+            name: "Inswings",
+            synopsis: "Information about Crim Inswings."
+        },
+        {
+            key: "zipTraks",
+            name: "Ziptraks",
+            synopsis: "Information about Ziptraks."
+        },
+        {
+            key: "hissScreens",
+            name: "Hiss Screens",
+            synopsis: "Information about all Hiss Screens."
+        },
+        {
+            key: "blinds",
+            name: "Blinds",
+            synopsis: "Information about Blinds, Venetians and Thermacells."
+        },
+        {
+            key: "shutters",
+            name: "Shutters",
+            synopsis: "Information about Shutters."
+        },
+        {
+            key: "extShutters",
+            name: "Ext Shutters",
+            synopsis: "Information about External Shutters."
+        },
+        {
+            key: "umbrellas",
+            name: "Umbrellas",
+            synopsis: "Information about Umbrellas."
+        },
+        {
+            key: "waveshades",
+            name: "Waveshades",
+            synopsis: "Informations about Waveshades."
+        },
+        {
+            key: "awnings",
+            name: "Awnings",
+            synopsis: "Information about Awnings."
+        },
+        {
+            key: "louvers",
+            name: "Louvers",
+            synopsis: "Information about Louvers."
+        },
+        {
+            key: "shadeSails",
+            name: "Shade Sails",
+            synopsis: "Information about Shade Sails."
+        },
+        {
+            key: "robusters",
+            name: "Robusters",
+            synopsis: "Information about Robusters."
+        },
+      ]
     }
   ],
   buttons: {
     enter: "Enter",
     back: "Back",
     copy: "Copy",
-    productInfo: "Product Library"
   },
   finePrint: "Powered By © VCore. All Rights Reserved."
   // Add more text as needed

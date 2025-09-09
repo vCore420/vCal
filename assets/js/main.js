@@ -51,6 +51,7 @@ function openModal(deptKey) {
   enterBtn.onclick = function() {
     closeModal();
     enterDepartment(dept.key);
+    window.scrollTo(0, 0); 
   };
   document.getElementById('deptModal').style.display = 'block';
 }
@@ -69,20 +70,36 @@ function enterDepartment(deptKey) {
   const dept = textContent.departments.find(d => d.key === deptKey);
   if (!dept) return;
 
-  dept.calculators.forEach(calc => {
-    
-
-    const card = document.createElement('div');
-    card.className = 'card liquid-glass';
-    card.innerHTML = `
-      <div class="card-label">${calc.name}</div>
-      <p>${calc.synopsis}</p>
-      <button class="button" onclick="openCalculator('${calc.key}')">
-        ${textContent.buttons.enter}
-      </button>
-    `;
-    calcGrid.appendChild(card);
-  });
+  // If department has calculators, show calculator cards
+  if (dept.calculators && dept.calculators.length) {
+    dept.calculators.forEach(calc => {
+      const card = document.createElement('div');
+      card.className = 'card liquid-glass';
+      card.innerHTML = `
+        <div class="card-label">${calc.name}</div>
+        <p>${calc.synopsis}</p>
+        <button class="button" onclick="openCalculator('${calc.key}')">
+          ${textContent.buttons.enter}
+        </button>
+      `;
+      calcGrid.appendChild(card);
+    });
+  }
+  // If department has products, show product info cards
+  else if (dept.product && dept.product.length) {
+    dept.product.forEach(prod => {
+      const card = document.createElement('div');
+      card.className = 'card liquid-glass';
+      card.innerHTML = `
+        <div class="card-label">${prod.name}</div>
+        <p>${prod.synopsis}</p>
+        <button class="button" onclick="openProductInfo('${prod.key}')">
+          ${textContent.buttons.enter}
+        </button>
+      `;
+      calcGrid.appendChild(card);
+    });
+  }
 
   // Remove any existing back button container
   let backBtnContainer = document.getElementById('calc-back-btn-container');
@@ -105,6 +122,40 @@ function enterDepartment(deptKey) {
 
   // Insert after the grid
   calcGrid.parentNode.insertBefore(backBtnContainer, calcGrid.nextSibling);
+}
+
+// Add this function to show product info
+function openProductInfo(productKey) {
+  showSection('calculator-logic-container');
+  const logicContainer = document.getElementById('calculator-logic-container');
+  const productDept = textContent.departments.find(d => d.key === 'product');
+  const product = productDept.product.find(p => p.key === productKey);
+  if (!product) {
+    logicContainer.innerHTML = "<p>Product info not found.</p>";
+    return;
+  }
+
+  let detailsHtml = '';
+  if (product.details && product.details.length) {
+    detailsHtml = product.details.map(section => `
+      <section class="product-section">
+        <h3>${section.heading}</h3>
+        ${Array.isArray(section.content)
+          ? `<ul>${section.content.map(item => `<li>${item}</li>`).join('')}</ul>`
+          : `<p>${section.content}</p>`
+        }
+      </section>
+    `).join('');
+  }
+
+  logicContainer.innerHTML = `
+    <h2>${product.name}</h2>
+    <div class="product-info">
+      <p>${product.synopsis}</p>
+      ${detailsHtml}
+    </div>
+    <button class="button" onclick="closeCalculator()">Back</button>
+  `;
 }
 
 function openCalculator(calcKey) {
@@ -176,3 +227,6 @@ function closeCalculator() {
   showSection('calculator-selection-grid');
   window.scrollTo(0, 0); 
 }
+
+
+ 

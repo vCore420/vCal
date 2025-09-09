@@ -1,6 +1,7 @@
 html {
   max-width: 100%;
   overflow-x: hidden;
+  background: none;
 }
 
 body {
@@ -105,7 +106,7 @@ p {
 
 /* Liquid glass effect */
 .liquid-glass {
-  min-width: 300px;
+  min-width: 280px;
 }
 
 /* Hide inactive sections */
@@ -226,6 +227,53 @@ p {
   padding: 0.8em 0;
   border-radius: 0.5em;
 }
+
+/* Product Info Section */
+.product-info p,
+.product-info .product-section p {
+  color: var(--light-text) !important;
+}
+
+.product-info {
+  background: var(--card-bg, #f5f2ff);
+  border-radius: 12px;
+  padding: 2em 1.2em;
+  margin: 1em 0;
+  color: var(--light-text);
+  box-shadow: var(--glass-shadow-dark, 0 2px 18px 1px rgba(44, 27, 74, 0.12));
+  font-size: 1.1em;
+}
+
+.product-section {
+  margin-bottom: 1.5em;
+}
+
+.product-section h3 {
+  font-size: 1.2em;
+  margin-bottom: 0.5em;
+  color: var(--light-text);
+}
+
+.product-section ul {
+  margin: 0.5em 0 0 1.2em;
+  padding: 0;
+  list-style: disc;
+}
+
+.product-section p {
+  margin: 0.5em 0 0 0;
+}
+
+/* Fix this later, works its just not clean enough for me*/
+.product-info,
+.product-info h2,
+.product-info p,
+.product-info ul,
+.product-info li,
+.product-section h3,
+.product-section p {
+  text-align: left;
+} 
 
 /* Fine print */
 .fine-print {
