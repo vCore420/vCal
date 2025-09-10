@@ -2,6 +2,7 @@ window.onload = function() {
   document.getElementById('main-title').textContent = textContent.app.title;
   document.getElementById('main-synopsis').textContent = textContent.app.synopsis;
   document.getElementById('fine-print').textContent = textContent.finePrint;
+  
 
   // Show only the department grid on load
   showSection('department-grid');
@@ -124,12 +125,13 @@ function enterDepartment(deptKey) {
   calcGrid.parentNode.insertBefore(backBtnContainer, calcGrid.nextSibling);
 }
 
-// Add this function to show product info
+// Show product info
 function openProductInfo(productKey) {
   showSection('calculator-logic-container');
   const logicContainer = document.getElementById('calculator-logic-container');
   const productDept = textContent.departments.find(d => d.key === 'product');
   const product = productDept.product.find(p => p.key === productKey);
+ 
   if (!product) {
     logicContainer.innerHTML = "<p>Product info not found.</p>";
     return;

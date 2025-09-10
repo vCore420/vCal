@@ -17,9 +17,9 @@ const textContent = {
         {
             key: "internalDoor",
             name: "Internal Door Calculator",
-            synopsis: "Calculate the overall size of an internal door on first measure."
+            synopsis: "Calculate the overall size of an internal door on first measure." 
         },
-        // ...add more calculators for Sales
+        // ...add more calculators for Sales here
       ]
     },
     {
@@ -42,7 +42,7 @@ const textContent = {
             name: "Main Slider Cutting/Making Calculator",
             synopsis: "Calculate cutting and making sizes for Lifestyle or Crim slider doors."
         },
-        // ...add calculators for Manufacturer
+        // ...add more calculators for Manufacturer here
       ]
     },
     {
@@ -70,9 +70,11 @@ const textContent = {
             name: "Ziptrak Spring Tension/Turns",
             synopsis: "Determine the amount of turns for spring tension in Ziptrak systems."
         },
-        // ...add calculators for Installer
+        // ...add more calculators for Installer here
       ]
     },
+    
+    // ----- Product Info -----
     {
       key: "product",
       name: "Product Info",
@@ -81,27 +83,38 @@ const textContent = {
         {
             key: "doors",
             name: "Doors",
-            synopsis: "Information about all Lifestyle and Crim doors and windows.",
+            synopsis: "Information about all Lifestyle and Crimsafe doors and windows.",
             details: [
               {
                 heading: "Overview",
                 content: "Lifestyle and Crim doors are designed for security and aesthetics. Available in multiple finishes."
               },
               {
-                heading: "Lifestyle Door info",
+                heading: "Product Info",
                 content: [
+                // Main Features and selling points of the product
                   "Placeholder",
                   "Placeholder",
                   "Placeholder"
                 ]
               },
               {
-                heading: "Crimsafe Door info",
+                heading: "Product Specs",
                 content: [
+                // links to pdfs of the products sepcs
                   "Placeholder",
                   "Placeholder",
                   "Placeholder"
                 ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                  // hpyer links o products website and other useful links 
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
               }
               // Add more sections as needed
             ]
@@ -109,67 +122,457 @@ const textContent = {
         {
             key: "sliders",
             name: "Sliders",
-            synopsis: "Information about all Lifestyle and Crim Sliders."
+            synopsis: "Information about all Lifestyle and Crim Sliders.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Lifestyle and Crim sliding doors are designed for security and aesthetics. Available in multiple finishes."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+              }
+           ]
         },
         {
             key: "inswings",
             name: "Inswings",
-            synopsis: "Information about Crim Inswings."
+            synopsis: "Information about Crim Inswings.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Placeholder."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+              }
+          ]
         },
         {
             key: "zipTraks",
             name: "Ziptraks",
-            synopsis: "Information about Ziptraks."
+            synopsis: "Information about Ziptraks.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Placeholder."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+               }
+           ]
         },
         {
             key: "hissScreens",
             name: "Hiss Screens",
-            synopsis: "Information about all Hiss Screens."
+            synopsis: "Information about all Hiss Screens.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Placeholder."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+               }
+           ]
         },
         {
             key: "blinds",
             name: "Blinds",
-            synopsis: "Information about Blinds, Venetians and Thermacells."
+            synopsis: "Information about Blinds, Venetians and Thermacells.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Placeholder."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+               }
+           ]
         },
         {
             key: "shutters",
             name: "Shutters",
-            synopsis: "Information about Shutters."
+            synopsis: "Information about Shutters.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Placeholder."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+               }
+           ]
         },
         {
             key: "extShutters",
             name: "Ext Shutters",
-            synopsis: "Information about External Shutters."
+            synopsis: "Information about External Shutters.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Placeholder."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+               }
+           ]
         },
         {
             key: "umbrellas",
             name: "Umbrellas",
-            synopsis: "Information about Umbrellas."
+            synopsis: "Information about Umbrellas.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Placeholder."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+               }
+           ]
         },
         {
             key: "waveshades",
             name: "Waveshades",
-            synopsis: "Informations about Waveshades."
+            synopsis: "Informations about Waveshades.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Placeholder."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+               }
+           ]
         },
         {
             key: "awnings",
             name: "Awnings",
-            synopsis: "Information about Awnings."
+            synopsis: "Information about Awnings.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Placeholder."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+               }
+           ]
         },
         {
             key: "louvers",
             name: "Louvers",
-            synopsis: "Information about Louvers."
+            synopsis: "Information about Louvers.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Placeholder."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+               }
+           ]
         },
         {
             key: "shadeSails",
             name: "Shade Sails",
-            synopsis: "Information about Shade Sails."
+            synopsis: "Information about Shade Sails.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Placeholder."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+               }
+           ]
         },
         {
             key: "robusters",
             name: "Robusters",
-            synopsis: "Information about Robusters."
+            synopsis: "Information about Robusters.",
+            details: [
+              {
+                heading: "Overview",
+                content: "Placeholder."
+              },
+              {
+                heading: "Product Info",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                heading: "Product Specs",
+                content: [
+                  "Placeholder",
+                  "Placeholder",
+                  "Placeholder"
+                ]
+              },
+              {
+                  heading: "Links",
+                  content: [
+                    "Placeholder",
+                    "Placeholder",
+                    "Placeholder"
+                  ]
+               }
+           ]
         },
       ]
     }
