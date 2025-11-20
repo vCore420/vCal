@@ -179,16 +179,16 @@ const calculators = {
 
             if (doorType === 'lifestyle') {
                 output +=
-                    `Door Width = ${(width + mullion) - 8}mm<br>` +
+                    `Door Width = ${(width + mullion) - 36}mm<br>` +
                     `Door Height = ${zHeight - 74}mm<br>` +
-                    `Grill Cut at ${(width + mullion) - 120}mm x ${(zHeight - 74) - 120}mm<br>` +
+                    `Grill Cut at ${(width + mullion) - 156}mm x ${(zHeight - 74) - 120}mm<br>` +
                     `Overall Door Frame Cut Length = ${((width + mullion + 92) * 2) + ((zHeight + 26) * 2)}mm<br>` +
                     `Overall Z Frame Cut Length = ${((zWidth + 100) * 2) + ((zHeight + 100) * 2)}mm<br>`;
             } else if (doorType === 'crimsafe') {
                 output +=
-                    `Door Width = ${(width + mullion) - 8}mm (+ 100 for P/C)<br>` +
+                    `Door Width = ${(width + 50) - 36}mm (+ 100 for P/C)<br>` +
                     `Door Height = ${zHeight - 74}mm (+ 100 for P/C)<br>` +
-                    `Mesh Cut at ${(width + mullion) - 114}mm x ${(zHeight - 74) - 114}mm<br>` +
+                    `Mesh Cut at ${(width + 50) - 150}mm x ${(zHeight - 74) - 114}mm<br>` +
                     `Overall Door Frame Cut Length = ${((width + mullion + 92) * 2) + ((zHeight + 26 ) * 2)}mm<br>` +
                     `Overall Z Frame Cut Length = ${((zWidth + 100) * 2) + ((zHeight + 100) * 2)}mm<br>`;
             }
@@ -328,4 +328,5 @@ const calculators = {
         }
     },
   // Add more calculators here
+
 };
