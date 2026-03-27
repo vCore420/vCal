@@ -153,6 +153,8 @@ const calculators = {
             { id: "doorPanelWidth", label: "Door Panel Width (mm):", type: "number", min: 0 },
             { id: "mullionWidth", label: "Mullion Width (mm):", type: "number", min: 0 },
             { id: "sliderhandleHeight", label: "Handle Height (mm):", type: "number", min: 0 },
+            { id: "boxSection", label: "Box Section", type: "checkbox" },
+            { id: "internalFit", label: "Internal Fit", type: "checkbox" },
             { id: "doorType", label: "Door Type:", type: "radio", options: [
                 { value: "lifestyle", label: "Lifestyle" },
                 { value: "crimsafe", label: "Crimsafe" }
@@ -170,28 +172,79 @@ const calculators = {
             const handle = values.sliderhandleHeight;
             const doorType = values.doorType;
             const orientation = values.doorOrientation;
+            const boxSection = values.boxSection;
+            const internalFit = values.internalFit;
+
+            const doorHeight = zHeight - (internalFit ? 36 : 74);
+            const lifestyleDoorWidth = (width + mullion) - (internalFit ? 19 : 36);
+            const crimsafeDoorWidth = (width + 50) - (internalFit ? 19 : 36);
+
+            const grillWidth = lifestyleDoorWidth - 120;
+            const grillHeight = doorHeight - 120;
+
+            const meshWidth = crimsafeDoorWidth - 114;
+            const meshHeight = doorHeight - 114;
+
+            const draftStrip = doorHeight + 74;
+            const interlockerFlatBar = doorHeight + 19;
+            const interlockerZ = doorHeight + 19;
+            const interlockerL = doorHeight - 26;
 
             let output =
                 `Z Frame Width = ${zWidth}mm (+ 100 for P/C)<br>` +
-                `Z Frame Height = ${zHeight}mm (+ 100 for P/C)<br>` +
+                `Z Frame Height = ${zHeight}mm (+ 100 for P/C)<br>`;
+
+            if (boxSection) {
+                output +=
+                    `Box Section Width = ${zWidth}mm (+ 100 for P/C)<br>` +
+                    `Box Section Height = ${zHeight}mm (+ 100 for P/C)<br>`;
+            }
+
+            output +=
+                `Roller Track = ${zWidth}mm (+ 100 for P/C)<br>` +
                 `Closes to the = ${orientation.charAt(0).toUpperCase() + orientation.slice(1)}<br>` +
                 `Handle Height = ${handle}mm<br>`;
 
             if (doorType === 'lifestyle') {
                 output +=
-                    `Door Width = ${(width + mullion) - 36}mm<br>` +
-                    `Door Height = ${zHeight - 74}mm<br>` +
-                    `Grill Cut at ${(width + mullion) - 156}mm x ${(zHeight - 74) - 120}mm<br>` +
-                    `Overall Door Frame Cut Length = ${((width + mullion + 92) * 2) + ((zHeight + 26) * 2)}mm<br>` +
+                    `Door Width = ${lifestyleDoorWidth}mm<br>` +
+                    `Door Height = ${doorHeight}mm<br>` +
+                    `Draft Strip = ${draftStrip}mm (+ 100 for P/C)<br>` +
+                    `Grill Cut at ${grillWidth}mm x ${grillHeight}mm<br>` +
+                    `Overall Door Frame Cut Length = ${((lifestyleDoorWidth + 100) * 2) + ((doorHeight + 100) * 2)}mm<br>` +
                     `Overall Z Frame Cut Length = ${((zWidth + 100) * 2) + ((zHeight + 100) * 2)}mm<br>`;
+
+                if (boxSection) {
+                    output +=
+                        `Overall Box Section Cut Length = ${((zWidth + 100) * 2) + ((zHeight + 100) * 2)}mm<br>`;
+                }
+
+                output +=
+                    `Overall Roller Track = ${zWidth + 100}mm<br>` +
+                    `Overall Draft Strip = ${draftStrip + 100}mm<br>`;
             } else if (doorType === 'crimsafe') {
                 output +=
-                    `Door Width = ${(width + 50) - 36}mm (+ 100 for P/C)<br>` +
-                    `Door Height = ${zHeight - 74}mm (+ 100 for P/C)<br>` +
-                    `Mesh Cut at ${(width + 50) - 150}mm x ${(zHeight - 74) - 114}mm<br>` +
-                    `Overall Door Frame Cut Length = ${((width + mullion + 92) * 2) + ((zHeight + 26 ) * 2)}mm<br>` +
+                    `Door Width = ${crimsafeDoorWidth}mm (+ 100 for P/C)<br>` +
+                    `Door Height = ${doorHeight}mm (+ 100 for P/C)<br>` +
+                    `Interlocker Flat Bar = ${interlockerFlatBar}mm (+ 100 for P/C)<br>` +
+                    `Interlocker Z = ${interlockerZ}mm (+ 100 for P/C)<br>` +
+                    `Interlocker L = ${interlockerL}mm (+ 100 for P/C)<br>` +
+                    `Mesh Cut at ${meshWidth}mm x ${meshHeight}mm<br>` +
+                    `Overall Door Frame Cut Length = ${((crimsafeDoorWidth + 100) * 2) + ((doorHeight + 100) * 2)}mm<br>` +
                     `Overall Z Frame Cut Length = ${((zWidth + 100) * 2) + ((zHeight + 100) * 2)}mm<br>`;
+
+                if (boxSection) {
+                    output +=
+                        `Overall Box Section Cut Length = ${((zWidth + 100) * 2) + ((zHeight + 100) * 2)}mm<br>`;
+                }
+
+                output +=
+                    `Overall Roller Track = ${zWidth + 100}mm<br>` +
+                    `Overall Interlocker Flat Bar = ${interlockerFlatBar + 100}mm<br>` +
+                    `Overall Interlocker Z = ${interlockerZ + 100}mm<br>` +
+                    `Overall Interlocker L = ${interlockerL + 100}mm<br>`;
             }
+
             return output;
         }
     },

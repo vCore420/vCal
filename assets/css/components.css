@@ -5,8 +5,14 @@
   left: 0;
   top: 0;
   z-index: 10;
-  background: var(--dark-banner);
+  background:
+    linear-gradient(
+      135deg,
+      rgb(87, 201, 112) 30%,
+      rgb(44, 53, 59) 100%
+    );
   box-shadow: var(--dark-shadow);
+  border-bottom: 1px solid rgba(87, 201, 111, 0.14);
 }
 
 /* Buttons */
@@ -18,11 +24,15 @@
   padding: 0.5em 1.2em;
   font-size: 1.3em;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  box-shadow: 0 4px 14px rgba(12, 16, 18, 0.10);
 }
 .button:hover {
   background: var(--dark-button-hover);
+  border-color: rgba(87, 201, 111, 0.32);
+  transform: translateY(-1px);
 }
+
 
 /* Liquid Glass Effect/Filter */
 .liquid-glass {
@@ -439,7 +449,7 @@
   margin: 0 auto;
   display: block;
   aspect-ratio: 4/3;
-  background: #18142a;
+  background: var(--dark-bg);
   overflow: hidden;
 }
 
@@ -474,7 +484,9 @@
 }
 
 .card:hover {
-  box-shadow: 0 6px 32px 0 rgba(44,27,74,0.18);
+  box-shadow:
+    0 10px 30px rgba(20, 26, 29, 0.16),
+    0 0 0 1px rgba(87, 201, 111, 0.10);
   transform: translateY(-4px) scale(1.03);
 }
 
@@ -498,9 +510,12 @@
 .card-modal {
   display: none;
   position: fixed;
-  z-index: 1000;
-  left: 0; top: 0; width: 100%; height: 100%;
-  background: rgba(24,20,42,0.82);
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(16, 21, 23, 0.72);
   align-items: center;
   justify-content: center;
 }

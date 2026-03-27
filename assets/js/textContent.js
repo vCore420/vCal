@@ -1,6 +1,6 @@
 const textContent = {
   app: {
-    title: "vCalculator",
+    title: "Pomss Calculator",
     synopsis: "A suite of calculators for the sales, manufacturing, and installation team.",
   },
   departments: [

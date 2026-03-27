@@ -1,8 +1,6 @@
 window.onload = function() {
-  document.getElementById('main-title').textContent = textContent.app.title;
-  document.getElementById('main-synopsis').textContent = textContent.app.synopsis;
+  updateBannerForDepartment();
   document.getElementById('fine-print').textContent = textContent.finePrint;
-  
 
   // Show only the department grid on load
   showSection('department-grid');
@@ -12,12 +10,15 @@ window.onload = function() {
   textContent.departments.forEach(dept => {
     const card = document.createElement('div');
     card.className = 'card liquid-glass';
-    card.onclick = () => openModal(dept.key);
+    card.onclick = () => {
+      enterDepartment(dept.key);
+      window.scrollTo(0, 0);
+    };
 
     card.innerHTML = `
       <img src="assets/img/${dept.key}.png" class="card-thumb" alt="${dept.name} Preview" />
       <div class="card-label">${dept.name}</div>
-      <button class="button" onclick="event.stopPropagation(); openModal('${dept.key}')">
+      <button class="button" onclick="event.stopPropagation(); enterDepartment('${dept.key}'); window.scrollTo(0, 0);">
         ${textContent.buttons.enter}
       </button>
     `;
@@ -30,6 +31,32 @@ window.onload = function() {
 };
 
 const CALCULATOR_HISTORY_KEY = 'vcal-calculator-history';
+let activeDepartmentKey = null;
+
+function updateBannerForDepartment(deptKey) {
+  const titleEl = document.getElementById('main-title');
+  const synopsisEl = document.getElementById('main-synopsis');
+  if (!titleEl || !synopsisEl) return;
+
+  if (!deptKey) {
+    titleEl.textContent = textContent.app.title;
+    synopsisEl.textContent = textContent.app.synopsis;
+    return;
+  }
+
+  const dept = textContent.departments.find(function(item) {
+    return item.key === deptKey;
+  });
+
+  if (!dept) {
+    titleEl.textContent = textContent.app.title;
+    synopsisEl.textContent = textContent.app.synopsis;
+    return;
+  }
+
+  titleEl.textContent = dept.name;
+  synopsisEl.textContent = dept.preview || textContent.app.synopsis;
+}
 
 function readCalculatorHistoryStore() {
   try {
@@ -431,6 +458,13 @@ function showSection(sectionId) {
   const active = document.getElementById(sectionId);
   if (active) active.classList.remove('hidden');
 
+  if (sectionId === 'department-grid') {
+    activeDepartmentKey = null;
+    updateBannerForDepartment();
+  } else {
+    updateBannerForDepartment(activeDepartmentKey);
+  }
+
   updateTopBackButton(sectionId);
 }
 
@@ -493,6 +527,9 @@ function enterDepartment(deptKey) {
   const dept = textContent.departments.find(d => d.key === deptKey);
   if (!dept) return;
 
+  activeDepartmentKey = dept.key;
+  updateBannerForDepartment(activeDepartmentKey);
+
   // If department has calculators, show calculator cards
   if (dept.calculators && dept.calculators.length) {
     dept.calculators.forEach(calc => {
@@ -524,11 +561,9 @@ function enterDepartment(deptKey) {
     });
   }
 
-  // Remove any existing back button container
   let backBtnContainer = document.getElementById('calc-back-btn-container');
   if (backBtnContainer) backBtnContainer.remove();
 
-  // Create and insert centered back button container after the grid
   backBtnContainer = document.createElement('div');
   backBtnContainer.id = 'calc-back-btn-container';
   backBtnContainer.className = 'centered-btn-container';
@@ -543,7 +578,6 @@ function enterDepartment(deptKey) {
   };
   backBtnContainer.appendChild(backBtn);
 
-  // Insert after the grid
   calcGrid.parentNode.insertBefore(backBtnContainer, calcGrid.nextSibling);
 }
 
