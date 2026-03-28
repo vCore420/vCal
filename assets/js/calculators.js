@@ -1,3 +1,104 @@
+
+// Helper for calculating Crimsafe mesh lines based on door size and mid rail height
+function getCrimsafeMeshSplit(doorWidth, doorHeight, meshWidth, midRailHeight) {
+    const frameAndGapOffset = 67;
+    const fullMeshHeight = doorHeight - 114;
+
+    if (!Number.isFinite(midRailHeight)) {
+        return {
+            hasMidRail: false,
+            doorWidth: doorWidth,
+            meshWidth: meshWidth,
+            fullMeshHeight: fullMeshHeight
+        };
+    }
+
+    const bottomMeshHeight = midRailHeight - frameAndGapOffset;
+    const topMeshHeight = (doorHeight - midRailHeight) - frameAndGapOffset;
+
+    if (bottomMeshHeight <= 0 || topMeshHeight <= 0) {
+        return {
+            error: 'Mid Rail Centre is too close to the top or bottom of the door.'
+        };
+    }
+
+    return {
+        hasMidRail: true,
+        doorWidth: doorWidth,
+        meshWidth: meshWidth,
+        midRailHeight: midRailHeight,
+        bottomMeshHeight: bottomMeshHeight,
+        topMeshHeight: topMeshHeight
+    };
+}
+
+function buildCrimsafeMeshOnlyLines(doorWidth, doorHeight, meshWidth, midRailHeight) {
+    const meshData = getCrimsafeMeshSplit(doorWidth, doorHeight, meshWidth, midRailHeight);
+
+    if (meshData.error) {
+        return meshData.error + '<br>';
+    }
+
+    if (!meshData.hasMidRail) {
+        return 'Mesh Cut at ' + meshData.meshWidth.toFixed(0) + 'mm x ' + meshData.fullMeshHeight.toFixed(0) + 'mm<br>';
+    }
+
+    return (
+        'Bottom Mesh Cut at ' + meshData.meshWidth.toFixed(0) + 'mm x ' + meshData.bottomMeshHeight.toFixed(0) + 'mm<br>' +
+        'Top Mesh Cut at ' + meshData.meshWidth.toFixed(0) + 'mm x ' + meshData.topMeshHeight.toFixed(0) + 'mm<br>'
+    );
+}
+
+function buildCrimsafeDoorLines(doorWidth, doorHeight, meshWidth, midRailHeight) {
+    const meshData = getCrimsafeMeshSplit(doorWidth, doorHeight, meshWidth, midRailHeight);
+
+    if (meshData.error) {
+        return meshData.error + '<br>';
+    }
+
+    if (!meshData.hasMidRail) {
+        return 'Mesh Cut at ' + meshData.meshWidth.toFixed(0) + 'mm x ' + meshData.fullMeshHeight.toFixed(0) + 'mm<br>';
+    }
+
+    return (
+        'Mid Rail Centre = ' + meshData.midRailHeight.toFixed(0) + 'mm up from bottom of door<br>' +
+        'Bottom Mesh Cut at ' + meshData.meshWidth.toFixed(0) + 'mm x ' + meshData.bottomMeshHeight.toFixed(0) + 'mm<br>' +
+        'Top Mesh Cut at ' + meshData.meshWidth.toFixed(0) + 'mm x ' + meshData.topMeshHeight.toFixed(0) + 'mm<br>' +
+        'Mid Rail = ' + meshData.doorWidth.toFixed(0) + 'mm (+ 100 for P/C)<br>' +
+        'Mid Rail Cover = ' + meshData.doorWidth.toFixed(0) + 'mm (+ 100 for P/C)<br>' +
+        'Overall Mid Rail = ' + (meshData.doorWidth + 100).toFixed(0) + 'mm<br>' +
+        'Overall Mid Rail Cover = ' + (meshData.doorWidth + 100).toFixed(0) + 'mm<br>'
+    );
+}
+
+function getBuildoutSideDeductions(buildoutConfig) {
+    const configs = {
+        all4: { left: true, right: true, top: true, bottom: true },
+
+        leftRightTop: { left: true, right: true, top: true, bottom: false },
+        leftRightBottom: { left: true, right: true, top: false, bottom: true },
+        leftTopBottom: { left: true, right: false, top: true, bottom: true },
+        rightTopBottom: { left: false, right: true, top: true, bottom: true },
+
+        leftRight: { left: true, right: true, top: false, bottom: false },
+        topBottom: { left: false, right: false, top: true, bottom: true },
+        leftTop: { left: true, right: false, top: true, bottom: false },
+        rightTop: { left: false, right: true, top: true, bottom: false },
+        leftBottom: { left: true, right: false, top: false, bottom: true },
+        rightBottom: { left: false, right: true, top: false, bottom: true }
+    };
+
+    const selected = configs[buildoutConfig] || configs.all4;
+
+    return {
+        selected: selected,
+        left: selected.left ? 24 : 3,
+        right: selected.right ? 24 : 3,
+        top: selected.top ? 24 : 3,
+        bottom: selected.bottom ? 24 : 3
+    };
+}
+
 const calculators = {
     
     // Sales
@@ -41,12 +142,16 @@ const calculators = {
         description: "Calculate mesh sizes for Crim doors.",
         inputs: [
             { id: "crimWidth", label: "Door Width (mm):", type: "number", min: 0 },
-            { id: "crimHeight", label: "Door Height (mm):", type: "number", min: 0 }
+            { id: "crimHeight", label: "Door Height (mm):", type: "number", min: 0 },
+            { id: "midRailHeight", label: "Mid Rail (mm) If applicable:", type: "number", min: 0 }
         ],
         calculate: function(values) {
-            let meshWidth = values.crimWidth - 114;
-            let meshHeight = values.crimHeight - 114;
-            return `Crimsafe Mesh needs to be ${meshWidth.toFixed(0)}mm Wide by ${meshHeight.toFixed(0)}mm High.`;
+            let doorWidth = values.crimWidth;
+            let doorHeight = values.crimHeight;
+            let meshWidth = doorWidth - 114;
+            let midRailHeight = values.midRailHeight;
+
+            return buildCrimsafeMeshOnlyLines(doorWidth, doorHeight, meshWidth, midRailHeight).replace(/<br>$/, '');
         }
     },
 
@@ -58,11 +163,17 @@ const calculators = {
             { id: "screenDoorWidth", label: "Door Width (mm):", type: "number", min: 0 },
             { id: "screenDoorHeight", label: "Door Height (mm):", type: "number", min: 0 },
             { id: "handleHeight", label: "Handle Height (mm):", type: "number", min: 0 },
+            { id: "midRailHeight", label: "Mid Rail (mm) If applicable:", type: "number", min: 0 },
             { id: "frameType", label: "Frame Type:", type: "radio", options: [
                 { value: "hinged", label: "Hinged" },
                 { value: "buildout", label: "BuildOut" },
                 { value: "adapter", label: "Adapter Frame" }
             ]},
+            { id: "buildoutAllSides", label: "All 4 Sides", type: "checkbox" },
+            { id: "buildoutLeft", label: "Left", type: "checkbox" },
+            { id: "buildoutRight", label: "Right", type: "checkbox" },
+            { id: "buildoutTop", label: "Top", type: "checkbox" },
+            { id: "buildoutBottom", label: "Bottom", type: "checkbox" },
             { id: "doorType", label: "Door Type:", type: "radio", options: [
                 { value: "lifestyle", label: "Lifestyle" },
                 { value: "crimsafe", label: "Crimsafe" }
@@ -76,6 +187,7 @@ const calculators = {
             const width = values.screenDoorWidth;
             const height = values.screenDoorHeight;
             const handle = values.handleHeight;
+            const midRailHeight = values.midRailHeight;
             const frameType = values.frameType;
             const doorType = values.doorType;
             const orientation = values.doorOrientation;
@@ -83,7 +195,7 @@ const calculators = {
             let output = "";
 
             if (frameType === 'hinged') {
-                output += 
+                output +=
                     `Door Width = ${width}mm (+ 100 for P/C)<br>` +
                     `Door Height = ${height}mm (+ 100 for P/C)<br>` +
                     `Hinged on = ${orientation.charAt(0).toUpperCase() + orientation.slice(1)}<br>` +
@@ -96,35 +208,75 @@ const calculators = {
                         `Overall BugStrip Cut Length = ${(height + 100) * 2 + (width + 100)}mm<br>`;
                 } else if (doorType === 'crimsafe') {
                     output +=
-                        `Mesh Cut at ${width - 114}mm x ${height - 114}mm<br>` +
+                        buildCrimsafeDoorLines(width, height, width - 114, midRailHeight) +
                         `Overall Door Frame Cut Length = ${(width + 100) * 2 + (height + 100) * 2}mm (Same Length for Covers)<br>` +
                         `Overall BugStrip Cut Length = ${(height + 100) * 2 + (width + 100)}mm<br>`;
                 }
             } else if (frameType === 'buildout') {
+                const selectedSides = {
+                    left: Boolean(values.buildoutAllSides || values.buildoutLeft),
+                    right: Boolean(values.buildoutAllSides || values.buildoutRight),
+                    top: Boolean(values.buildoutAllSides || values.buildoutTop),
+                    bottom: Boolean(values.buildoutAllSides || values.buildoutBottom)
+                };
+
+                if (!selectedSides.left && !selectedSides.right && !selectedSides.top && !selectedSides.bottom) {
+                    return 'Select at least one Build Out side.';
+                }
+
+                const buildoutDoorWidth =
+                    width - (selectedSides.left ? 24 : 3) - (selectedSides.right ? 24 : 3);
+
+                const buildoutDoorHeight =
+                    height - (selectedSides.top ? 24 : 3) - (selectedSides.bottom ? 24 : 3);
+
+                const buildoutSides = [
+                    selectedSides.left ? 'Left' : '',
+                    selectedSides.right ? 'Right' : '',
+                    selectedSides.top ? 'Top' : '',
+                    selectedSides.bottom ? 'Bottom' : ''
+                ].filter(Boolean).join(', ');
+
+                const overallBuildoutFrameCutLength =
+                    (selectedSides.left ? height + 100 : 0) +
+                    (selectedSides.right ? height + 100 : 0) +
+                    (selectedSides.top ? width + 100 : 0) +
+                    (selectedSides.bottom ? width + 100 : 0);
+
                 output +=
                     `B/O Frame Width = ${width}mm (+ 100 for P/C)<br>` +
                     `B/O Frame Height = ${height}mm (+ 100 for P/C)<br>` +
-                    `Door Width =  ${width - 48}mm (+ 100 for P/C)<br>`+
-                    `Door Height = ${height - 48}mm (+ 100 for P/C)<br>`+
+                    `B/O Sides = ${buildoutSides}<br>` +
+                    `Door Width = ${buildoutDoorWidth}mm (+ 100 for P/C)<br>` +
+                    `Door Height = ${buildoutDoorHeight}mm (+ 100 for P/C)<br>` +
                     `Hinged on = ${orientation.charAt(0).toUpperCase() + orientation.slice(1)}<br>` +
                     `Handle Height = ${handle}mm<br>`;
+
                 if (doorType === 'lifestyle') {
                     output +=
-                        `Grill Cut at ${width - 168}mm x ${height - 168}mm<br>` +
-                        `Overall B/O Frame Cut Length = ${(width + 100) * 2 + (height + 100) * 2}mm<br>` +
-                        `Overall Door Frame Cut Length = ${(height + 52) * 2 + (width + 52) * 2}mm<br>`;
+                        `Grill Cut at ${buildoutDoorWidth - 120}mm x ${buildoutDoorHeight - 120}mm<br>` +
+                        `Overall B/O Frame Cut Length = ${overallBuildoutFrameCutLength}mm<br>` +
+                        `Overall Door Frame Cut Length = ${((buildoutDoorWidth + 100) * 2) + ((buildoutDoorHeight + 100) * 2)}mm<br>`;
                 } else if (doorType === 'crimsafe') {
                     output +=
-                        `Mesh Cut at ${width - 162}mm x ${height - 162}mm<br>` +
-                        `Overall B/O Frame Cut Length = ${(width + 100) * 2 + (height + 100) * 2}mm<br>` +
-                        `Overall Door Frame Cut Length = ${(height + 52) * 2 + (width + 52) * 2}mm (Same Length for Covers)<br>`;
-                } 
+                        buildCrimsafeDoorLines(
+                            buildoutDoorWidth,
+                            buildoutDoorHeight,
+                            buildoutDoorWidth - 114,
+                            midRailHeight
+                        ) +
+                        `Overall B/O Frame Cut Length = ${overallBuildoutFrameCutLength}mm<br>` +
+                        `Overall Door Frame Cut Length = ${((buildoutDoorWidth + 100) * 2) + ((buildoutDoorHeight + 100) * 2)}mm (Same Length for Covers)<br>`;
+                }
             } else if (frameType === 'adapter') {
+                const adapterDoorWidth = width - 13;
+                const adapterDoorHeight = height - 8;
+
                 output +=
                     `Apt Frame Width = ${width}mm (+ 100 for P/C)<br>` +
                     `Apt Frame Height = ${height}mm (+ 100 for P/C)<br>` +
-                    `Door Width =  ${width - 13}mm (+ 100 for P/C)<br>`+
-                    `Door Height = ${height - 8}mm (+ 100 for P/C)<br>`+
+                    `Door Width = ${adapterDoorWidth}mm (+ 100 for P/C)<br>` +
+                    `Door Height = ${adapterDoorHeight}mm (+ 100 for P/C)<br>` +
                     `Hinged on = ${orientation.charAt(0).toUpperCase() + orientation.slice(1)}<br>` +
                     `Handle Height = ${handle}mm<br>`;
                 if (doorType === 'lifestyle') {
@@ -134,10 +286,10 @@ const calculators = {
                         `Overall Door Frame Cut Length = ${(height + 92) * 2 + (width + 87) * 2}mm<br>`;
                 } else if (doorType === 'crimsafe') {
                     output +=
-                        `Mesh Cut at ${width - 127}mm x ${height - 122}mm<br>` +
+                        buildCrimsafeDoorLines(adapterDoorWidth, adapterDoorHeight, width - 127, midRailHeight) +
                         `Overall Apt Frame Cut Length = ${(width + 100) + (height + 100) * 2}mm (Same Length for Covers)<br>` +
                         `Overall Door Frame Cut Length = ${(height + 92) * 2 + (width + 87) * 2}mm (Same Length for Covers)<br>`;
-                } 
+                }
             }
             return output;
         }
@@ -153,6 +305,7 @@ const calculators = {
             { id: "doorPanelWidth", label: "Door Panel Width (mm):", type: "number", min: 0 },
             { id: "mullionWidth", label: "Mullion Width (mm):", type: "number", min: 0 },
             { id: "sliderhandleHeight", label: "Handle Height (mm):", type: "number", min: 0 },
+            { id: "midRailHeight", label: "Mid Rail Centre From Bottom (mm):", type: "number", min: 0 },
             { id: "boxSection", label: "Box Section", type: "checkbox" },
             { id: "internalFit", label: "Internal Fit", type: "checkbox" },
             { id: "doorType", label: "Door Type:", type: "radio", options: [
@@ -170,6 +323,7 @@ const calculators = {
             const width = values.doorPanelWidth;
             const mullion = values.mullionWidth;
             const handle = values.sliderhandleHeight;
+            const midRailHeight = values.midRailHeight;
             const doorType = values.doorType;
             const orientation = values.doorOrientation;
             const boxSection = values.boxSection;
@@ -181,9 +335,6 @@ const calculators = {
 
             const grillWidth = lifestyleDoorWidth - 120;
             const grillHeight = doorHeight - 120;
-
-            const meshWidth = crimsafeDoorWidth - 114;
-            const meshHeight = doorHeight - 114;
 
             const draftStrip = doorHeight + 74;
             const interlockerFlatBar = doorHeight + 19;
@@ -229,7 +380,7 @@ const calculators = {
                     `Interlocker Flat Bar = ${interlockerFlatBar}mm (+ 100 for P/C)<br>` +
                     `Interlocker Z = ${interlockerZ}mm (+ 100 for P/C)<br>` +
                     `Interlocker L = ${interlockerL}mm (+ 100 for P/C)<br>` +
-                    `Mesh Cut at ${meshWidth}mm x ${meshHeight}mm<br>` +
+                    buildCrimsafeDoorLines(crimsafeDoorWidth, doorHeight, crimsafeDoorWidth - 114, midRailHeight) +
                     `Overall Door Frame Cut Length = ${((crimsafeDoorWidth + 100) * 2) + ((doorHeight + 100) * 2)}mm<br>` +
                     `Overall Z Frame Cut Length = ${((zWidth + 100) * 2) + ((zHeight + 100) * 2)}mm<br>`;
 

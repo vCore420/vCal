@@ -170,6 +170,9 @@ function readCalculatorInputSnapshot(calc) {
     } else if (input.type === 'checkbox') {
       const element = document.getElementById(input.id);
       snapshot[input.id] = element ? element.checked : false;
+    } else if (input.type === 'select') {
+      const element = document.getElementById(input.id);
+      snapshot[input.id] = element ? element.value : '';
     } else {
       const element = document.getElementById(input.id);
       snapshot[input.id] = element ? element.value : '';
@@ -187,6 +190,8 @@ function buildCalculatorValuesFromSnapshot(calc, snapshot) {
       values[input.id] = snapshot[input.id] || null;
     } else if (input.type === 'checkbox') {
       values[input.id] = Boolean(snapshot[input.id]);
+    } else if (input.type === 'select') {
+      values[input.id] = snapshot[input.id] || input.default || '';
     } else {
       values[input.id] = parseFloat(snapshot[input.id]);
     }
@@ -210,6 +215,11 @@ function restoreCalculatorHistoryEntry(calcKey, calc, index) {
       const element = document.getElementById(input.id);
       if (element) {
         element.checked = Boolean(entry.inputs[input.id]);
+      }
+    } else if (input.type === 'select') {
+      const element = document.getElementById(input.id);
+      if (element) {
+        element.value = entry.inputs[input.id] || input.default || '';
       }
     } else {
       const element = document.getElementById(input.id);
@@ -588,6 +598,7 @@ function openProductInfo(productKey) {
   }
 
   logicContainer.innerHTML = `
+    <button class="calc-close-btn" onclick="closeCalculator()">X</button>
     <h2>${product.name}</h2>
     <div class="product-info">
       <p>${product.synopsis}</p>
@@ -614,10 +625,11 @@ function openCalculator(calcKey) {
         '<label>' + input.label + '</label>' +
         '<div class="radio-group">' +
           input.options.map(function(opt) {
+            const isChecked = (input.default && input.default === opt.value) ? ' checked' : '';
             return (
               '<label>' +
                 '<span>' + opt.label + '</span>' +
-                '<input type="radio" name="' + input.id + '" value="' + opt.value + '" />' +
+                '<input type="radio" name="' + input.id + '" value="' + opt.value + '"' + isChecked + ' />' +
               '</label>'
             );
           }).join('') +
@@ -626,13 +638,26 @@ function openCalculator(calcKey) {
     }
 
     if (input.type === 'checkbox') {
+      const isChecked = input.default ? ' checked' : '';
       return (
         '<div class="checkbox-group">' +
           '<label>' +
             '<span>' + input.label + '</span>' +
-            '<input type="checkbox" id="' + input.id + '" />' +
+            '<input type="checkbox" id="' + input.id + '"' + isChecked + ' />' +
           '</label>' +
         '</div>'
+      );
+    }
+
+    if (input.type === 'select') {
+      return (
+        '<label for="' + input.id + '">' + input.label + '</label>' +
+        '<select id="' + input.id + '" class="input">' +
+          input.options.map(function(opt) {
+            const isSelected = ((input.default || '') === opt.value) ? ' selected' : '';
+            return '<option value="' + opt.value + '"' + isSelected + '>' + opt.label + '</option>';
+          }).join('') +
+        '</select>'
       );
     }
 
@@ -643,7 +668,7 @@ function openCalculator(calcKey) {
   }).join('');
 
   logicContainer.innerHTML =
-    '<button class="calc-close-btn" onclick="closeCalculator()">X</button>' +  
+    '<button class="calc-close-btn" onclick="closeCalculator()">X</button>' +
     '<h2>' + calc.title + '</h2>' +
     '<p>' + calc.description + '</p>' +
     '<form id="calcForm">' +
@@ -655,6 +680,94 @@ function openCalculator(calcKey) {
     '</div>' +
     '<div id="calcResult"></div>' +
     '<div id="calcHistoryHost">' + buildCalculatorHistoryMarkup(calcKey) + '</div>';
+
+  (function setupBuildoutSideControls() {
+    const frameTypeInputs = logicContainer.querySelectorAll('input[name="frameType"]');
+    const buildoutAllSides = logicContainer.querySelector('#buildoutAllSides');
+    const buildoutLeft = logicContainer.querySelector('#buildoutLeft');
+    const buildoutRight = logicContainer.querySelector('#buildoutRight');
+    const buildoutTop = logicContainer.querySelector('#buildoutTop');
+    const buildoutBottom = logicContainer.querySelector('#buildoutBottom');
+
+    if (!buildoutAllSides || !buildoutLeft || !buildoutRight || !buildoutTop || !buildoutBottom) {
+      return;
+    }
+
+    const sideCheckboxes = [
+      buildoutLeft,
+      buildoutRight,
+      buildoutTop,
+      buildoutBottom
+    ];
+
+    const buildoutGroups = [
+      buildoutAllSides.closest('.checkbox-group'),
+      buildoutLeft.closest('.checkbox-group'),
+      buildoutRight.closest('.checkbox-group'),
+      buildoutTop.closest('.checkbox-group'),
+      buildoutBottom.closest('.checkbox-group')
+    ].filter(Boolean);
+
+    const buildoutRow = document.createElement('div');
+    buildoutRow.className = 'buildout-side-row';
+
+    const firstBuildoutGroup = buildoutGroups[0];
+    if (firstBuildoutGroup) {
+      firstBuildoutGroup.parentNode.insertBefore(buildoutRow, firstBuildoutGroup);
+      buildoutGroups.forEach(function(group) {
+        buildoutRow.appendChild(group);
+      });
+    }
+
+    function getSelectedFrameType() {
+      const checked = logicContainer.querySelector('input[name="frameType"]:checked');
+      return checked ? checked.value : '';
+    }
+
+    function syncBuildoutVisibility() {
+      if (!frameTypeInputs.length) {
+        buildoutRow.style.display = '';
+        return;
+      }
+
+      const shouldShow = getSelectedFrameType() === 'buildout';
+      buildoutRow.style.display = shouldShow ? 'flex' : 'none';
+    }
+
+    function syncAll4Selection() {
+      const useAll4 = buildoutAllSides.checked;
+
+      sideCheckboxes.forEach(function(side) {
+        if (useAll4) {
+          side.checked = true;
+        }
+        side.disabled = useAll4;
+      });
+    }
+
+    const hasExistingSelection =
+      buildoutAllSides.checked ||
+      sideCheckboxes.some(function(side) {
+        return side.checked;
+      });
+
+    if (!hasExistingSelection) {
+      buildoutAllSides.checked = true;
+    }
+
+    syncAll4Selection();
+    syncBuildoutVisibility();
+
+    buildoutAllSides.addEventListener('change', function() {
+      syncAll4Selection();
+    });
+
+    frameTypeInputs.forEach(function(radio) {
+      radio.addEventListener('change', function() {
+        syncBuildoutVisibility();
+      });
+    });
+  })();
 
   bindCalculatorHistoryEvents(calcKey, calc);
 

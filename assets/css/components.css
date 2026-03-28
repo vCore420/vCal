@@ -147,8 +147,7 @@
   width: 85px;
   height: 40px;
   border-radius: 36px;
-  background: #100922; /* dark track */
-  box-shadow: 0 0 8px 1px rgba(12, 7, 20, 0.25);
+  background: var(--dark-bg); /* dark track */
   transition: background 0.3s;
   overflow: hidden;
 }
@@ -157,7 +156,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  border: 1px solid rgba(105, 79, 151, 0.801);  
+  border: 1px solid var(--dark-border);  
   border-radius: 36px;
 }
 .switch-bg::before,
@@ -182,7 +181,7 @@
   box-shadow:
     0 2px 8px 0 rgba(44, 27, 74, 0.18),   
     0 0.5px 2px 0 rgba(44, 27, 74, 0.10); 
-  border: 1px solid rgba(105, 79, 151, 0.801);
+  border: 1px solid var(--dark-border);
   transition: left 0.3s, box-shadow 0.3s, top 0.3s, background 0.3s;
   z-index: 2;
   display: flex;
@@ -282,7 +281,7 @@
 .switch-track input:checked ~ .switch-knob {
   left: 46px;
   background: #f8f8fc;
-  border: 1px solid rgba(87, 55, 143, 0.486);
+  border: 1px solid var(--dark-border);
 }
 /* Hide stars in light mode */
 .switch-track input:checked ~ .switch-bg .star {
@@ -293,8 +292,8 @@
 }
 /* --- LIGHT MODE (checked) --- */
 .switch-track input:checked ~ .switch-bg {
-  background: #6bbcff; /* blue track */
-  border: 1px solid rgba(87, 55, 143, 0.486);
+  background: #6bbcff75; /* blue track */
+  border: 3px solid var(--dark-border);
 }
 .switch-track input:checked ~ .switch-bg::before,
 .switch-track input:checked ~ .switch-bg::after {

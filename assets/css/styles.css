@@ -64,8 +64,8 @@ p {
 
 .top-back-btn {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
+  top: 1.2rem;
+  left: 4rem;
   z-index: 11;
   border: 1px solid var(--dark-border);
   background: var(--dark-button);
@@ -510,30 +510,44 @@ body.theme-light .calc-history-item {
   box-shadow: inset 0 0 0 1px rgba(87, 201, 111, 0.12);
 }
 
+.buildout-side-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9em;
+  margin: 0.7em 0 1em;
+}
+
+.buildout-side-row .checkbox-group {
+  margin: 0;
+}
+
+.buildout-side-row .checkbox-group label {
+  margin-top: 0;
+}
+
 body.theme-light .calc-result-line {
   background: transparent;
 }
 
 body.theme-light .result-number {
   background: var(--brand-green-tint);
-  color: var(--light-text);
+  color: var(--dark-text);
 }
 
 /* Product Info Section */
 .product-info p,
 .product-info .product-section p {
-  color: var(--light-text) !important;
+  color: var(--dark-text) !important;
 }
 
 .product-info {
   background: var(--card-bg);
   border-radius: 18px;
-  padding: 2em 1.2em;
+  padding: 1em 1.2em;
   margin: 1em 0;
-  color: var(--light-text);
-  box-shadow: var(--glass-shadow-dark);
+  color: var(--dark-text);
   font-size: 1.1em;
-  border: 1px solid rgba(231, 221, 226, 0.14);
+  border: 1px solid var(--field-border);
   background:
     linear-gradient(
       180deg,
@@ -550,7 +564,7 @@ body.theme-light .result-number {
 .product-section h3 {
   font-size: 1.2em;
   margin-bottom: 0.5em;
-  color: var(--light-text);
+  color: var(--dark-text);
 }
 
 .product-section ul {
@@ -752,11 +766,11 @@ body.theme-light .quick-calc-equals {
   }
 
   .top-back-btn {
-    top: 0.9rem;
+    top: 2rem;
     left: 0.75rem;
     min-height: 38px;
     font-size: 0.78rem;
-    padding: 0.45rem 0.72rem;
+    padding: 0.2rem 0.4rem;
     border-radius: 12px;
   }
 
