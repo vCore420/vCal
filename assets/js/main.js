@@ -560,25 +560,6 @@ function enterDepartment(deptKey) {
       calcGrid.appendChild(card);
     });
   }
-
-  let backBtnContainer = document.getElementById('calc-back-btn-container');
-  if (backBtnContainer) backBtnContainer.remove();
-
-  backBtnContainer = document.createElement('div');
-  backBtnContainer.id = 'calc-back-btn-container';
-  backBtnContainer.className = 'centered-btn-container';
-
-  const backBtn = document.createElement('button');
-  backBtn.className = 'button';
-  backBtn.textContent = textContent.buttons.back;
-  backBtn.onclick = function() {
-    showSection('department-grid');
-    backBtnContainer.remove();
-    window.scrollTo(0, 0); 
-  };
-  backBtnContainer.appendChild(backBtn);
-
-  calcGrid.parentNode.insertBefore(backBtnContainer, calcGrid.nextSibling);
 }
 
 // Show product info
@@ -662,6 +643,7 @@ function openCalculator(calcKey) {
   }).join('');
 
   logicContainer.innerHTML =
+    '<button class="calc-close-btn" onclick="closeCalculator()">X</button>' +  
     '<h2>' + calc.title + '</h2>' +
     '<p>' + calc.description + '</p>' +
     '<form id="calcForm">' +
@@ -672,8 +654,7 @@ function openCalculator(calcKey) {
       '<button type="button" class="button calc-copy-btn" id="calcCopyBtn">Copy Result</button>' +
     '</div>' +
     '<div id="calcResult"></div>' +
-    '<div id="calcHistoryHost">' + buildCalculatorHistoryMarkup(calcKey) + '</div>' +
-    '<button class="button" onclick="closeCalculator()">Back</button>';
+    '<div id="calcHistoryHost">' + buildCalculatorHistoryMarkup(calcKey) + '</div>';
 
   bindCalculatorHistoryEvents(calcKey, calc);
 

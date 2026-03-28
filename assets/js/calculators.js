@@ -255,29 +255,47 @@ const calculators = {
     // Even Hole Spacing (to the nearest 400mm)
     holeSpacing: {
         title: "Even Hole Spacing",
-        description: "Evenly spaced holes along a length (As close to 400mm as possible), specifying the distance in from each end.",
+        description: "Evenly spaced holes along a length, using the closest spacing to 400mm, 600mm, or 900mm, while keeping the same inset from each end.",
         inputs: [
-        { id: "lengthInput", label: "Enter length in mm:", type: "number", min: 401 },
-        { id: "spacingOption", label: "Amount in from Each End (mm):", type: "number", min: 0, default: 50 }
+            { id: "lengthInput", label: "Enter length in mm:", type: "number", min: 401 },
+            { id: "spacingOption", label: "Amount in from Each End (mm):", type: "number", min: 0, default: 50 },
+            {
+                id: "targetSpacing",
+                label: "Target Spacing:",
+                type: "radio",
+                options: [
+                    { value: "400", label: "Closest to 400mm" },
+                    { value: "600", label: "Closest to 600mm" },
+                    { value: "900", label: "Closest to 900mm" }
+                ]
+            }
         ],
         calculate: function(values) {
-        let length = values.lengthInput;
-        let spacingOption = values.spacingOption;
-        let effectiveLength = length - spacingOption * 2;
-        let bestSpacing = 0;
-        let minDifference = Infinity;
-        let bestDivisions = 1;
+            let length = values.lengthInput;
+            let spacingOption = values.spacingOption;
+            let targetSpacing = values.targetSpacing ? Number(values.targetSpacing) : 400;
+            let effectiveLength = length - spacingOption * 2;
 
-        for (let divisions = 1; divisions <= effectiveLength; divisions++) {
-            let spacing = effectiveLength / divisions;
-            let difference = Math.abs(spacing - 400);
-            if (difference < minDifference) {
-            minDifference = difference;
-            bestSpacing = spacing;
-            bestDivisions = divisions;
+            if (effectiveLength <= 0) {
+                return 'Length must be greater than the two end insets combined.';
             }
-        }
-        return `${spacingOption}mm in from each end, then spaced out by ${bestSpacing.toFixed(0)} mm (${bestDivisions + 1} holes)`;
+
+            let bestSpacing = 0;
+            let minDifference = Infinity;
+            let bestDivisions = 1;
+
+            for (let divisions = 1; divisions <= effectiveLength; divisions++) {
+                let spacing = effectiveLength / divisions;
+                let difference = Math.abs(spacing - targetSpacing);
+
+                if (difference < minDifference) {
+                    minDifference = difference;
+                    bestSpacing = spacing;
+                    bestDivisions = divisions;
+                }
+            }
+
+            return `${spacingOption}mm in from each end, then spaced out by ${bestSpacing.toFixed(0)}mm (${bestDivisions + 1} holes)`;
         }
     },
 
