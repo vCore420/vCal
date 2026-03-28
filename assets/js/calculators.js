@@ -305,7 +305,7 @@ const calculators = {
             { id: "doorPanelWidth", label: "Door Panel Width (mm):", type: "number", min: 0 },
             { id: "mullionWidth", label: "Mullion Width (mm):", type: "number", min: 0 },
             { id: "sliderhandleHeight", label: "Handle Height (mm):", type: "number", min: 0 },
-            { id: "midRailHeight", label: "Mid Rail Centre From Bottom (mm):", type: "number", min: 0 },
+            { id: "midRailHeight", label: "Mid Rail (mm) If applicable:", type: "number", min: 0 },
             { id: "boxSection", label: "Box Section", type: "checkbox" },
             { id: "internalFit", label: "Internal Fit", type: "checkbox" },
             { id: "doorType", label: "Door Type:", type: "radio", options: [
