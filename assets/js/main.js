@@ -140,11 +140,14 @@ function buildCalculatorHistoryMarkup(calcKey) {
       '<div class="calc-history-list">' +
         history.map(function(entry, index) {
           return (
-            '<button type="button" class="calc-history-item" data-history-index="' + index + '">' +
-              '<span class="calc-history-title">' + entry.title + '</span>' +
-              '<span class="calc-history-time">' + formatCalculatorHistoryTime(entry.createdAt) + '</span>' +
-              '<span class="calc-history-preview">' + buildHistoryPreview(entry.result) + '</span>' +
-            '</button>'
+            '<div class="calc-history-item" data-index="' + index + '">' +
+              '<div class="calc-history-row">' +
+                '<div class="calc-history-title">' + (entry.title || 'Untitled') + '</div>' +
+                '<button class="calc-history-delete" title="Delete Entry" data-index="' + index + '">&times;</button>' +
+              '</div>' +
+              '<div class="calc-history-time">' + formatCalculatorHistoryTime(entry.createdAt) + '</div>' +
+              '<div class="calc-history-preview">' + buildHistoryPreview(entry.result) + '</div>' +
+            '</div>'
           );
         }).join('') +
       '</div>' +
@@ -235,17 +238,34 @@ function restoreCalculatorHistoryEntry(calcKey, calc, index) {
   }
 }
 
+function deleteCalculatorHistoryEntry(calcKey, index) {
+  const store = readCalculatorHistoryStore();
+  if (!Array.isArray(store[calcKey])) return;
+  store[calcKey].splice(index, 1);
+  writeCalculatorHistoryStore(store);
+}
+
 function bindCalculatorHistoryEvents(calcKey, calc) {
   const historyHost = document.getElementById('calcHistoryHost');
   if (!historyHost) return;
 
   historyHost.onclick = function(event) {
-    const historyItem = event.target.closest('[data-history-index]');
+    // Delete button logic
+    if (event.target.classList.contains('calc-history-delete')) {
+      const index = parseInt(event.target.getAttribute('data-index'), 10);
+      if (!isNaN(index)) {
+        deleteCalculatorHistoryEntry(calcKey, index);
+        refreshCalculatorHistory(calcKey, calc);
+      }
+      event.stopPropagation();
+      return;
+    }
+
+    // Restore logic
+    const historyItem = event.target.closest('.calc-history-item');
     if (!historyItem) return;
-
-    const index = parseInt(historyItem.getAttribute('data-history-index'), 10);
+    const index = parseInt(historyItem.getAttribute('data-index'), 10);
     if (Number.isNaN(index)) return;
-
     restoreCalculatorHistoryEntry(calcKey, calc, index);
   };
 }
@@ -808,7 +828,9 @@ function openCalculator(calcKey) {
 
     document.getElementById('calcResult').innerHTML = formatCalculatorResult(result);
 
-    saveCalculatorHistoryEntry(calcKey, calc.title, inputSnapshot, result);
+    const jobName = inputSnapshot.jobName && inputSnapshot.jobName.trim();
+    const entryTitle = jobName || calc.title;
+    saveCalculatorHistoryEntry(calcKey, entryTitle, inputSnapshot, result);
     refreshCalculatorHistory(calcKey, calc);
   };
 }

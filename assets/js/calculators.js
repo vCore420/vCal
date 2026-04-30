@@ -1,8 +1,16 @@
 
 // Helper for calculating Crimsafe mesh lines based on door size and mid rail height
-function getCrimsafeMeshSplit(doorWidth, doorHeight, meshWidth, midRailHeight) {
-    const frameAndGapOffset = 67;
-    const fullMeshHeight = doorHeight - 114;
+function getCrimsafeParams(type) {
+    if (type === "classic") {
+        return { meshOffset: 114, frameDeduction: 57, meshGap: 10 };
+    } else { // ultimate (default)
+        return { meshOffset: 122, frameDeduction: 61, meshGap: 10 };
+    }
+}
+
+function getCrimsafeMeshSplit(doorWidth, doorHeight, meshWidth, midRailHeight, crimsafeType) {
+    const { meshOffset, frameDeduction, meshGap } = getCrimsafeParams(crimsafeType);
+    const fullMeshHeight = doorHeight - meshOffset;
 
     if (!Number.isFinite(midRailHeight)) {
         return {
@@ -13,8 +21,8 @@ function getCrimsafeMeshSplit(doorWidth, doorHeight, meshWidth, midRailHeight) {
         };
     }
 
-    const bottomMeshHeight = midRailHeight - frameAndGapOffset;
-    const topMeshHeight = (doorHeight - midRailHeight) - frameAndGapOffset;
+    const bottomMeshHeight = midRailHeight - frameDeduction - meshGap;
+    const topMeshHeight = (doorHeight - midRailHeight) - frameDeduction - meshGap;
 
     if (bottomMeshHeight <= 0 || topMeshHeight <= 0) {
         return {
@@ -32,8 +40,10 @@ function getCrimsafeMeshSplit(doorWidth, doorHeight, meshWidth, midRailHeight) {
     };
 }
 
-function buildCrimsafeMeshOnlyLines(doorWidth, doorHeight, meshWidth, midRailHeight) {
-    const meshData = getCrimsafeMeshSplit(doorWidth, doorHeight, meshWidth, midRailHeight);
+function buildCrimsafeMeshOnlyLines(doorWidth, doorHeight, midRailHeight, crimsafeType) {
+    const { meshOffset } = getCrimsafeParams(crimsafeType);
+    const meshWidth = doorWidth - meshOffset;
+    const meshData = getCrimsafeMeshSplit(doorWidth, doorHeight, meshWidth, midRailHeight, crimsafeType);
 
     if (meshData.error) {
         return meshData.error + '<br>';
@@ -49,8 +59,10 @@ function buildCrimsafeMeshOnlyLines(doorWidth, doorHeight, meshWidth, midRailHei
     );
 }
 
-function buildCrimsafeDoorLines(doorWidth, doorHeight, meshWidth, midRailHeight) {
-    const meshData = getCrimsafeMeshSplit(doorWidth, doorHeight, meshWidth, midRailHeight);
+function buildCrimsafeDoorLines(doorWidth, doorHeight, midRailHeight, crimsafeType) {
+    const { meshOffset } = getCrimsafeParams(crimsafeType);
+    const meshWidth = doorWidth - meshOffset;
+    const meshData = getCrimsafeMeshSplit(doorWidth, doorHeight, meshWidth, midRailHeight, crimsafeType);
 
     if (meshData.error) {
         return meshData.error + '<br>';
@@ -108,6 +120,7 @@ const calculators = {
         title: "B/O Door Calculator",
         description: "Determine the size a B/O Door needs to be based on the house daylight sizes. (For First Measure)",
         inputs: [
+            { id: "jobName", label: "Job Name:", type: "text" },
             { id: "doorWidth", label: "Daylight Width (mm):", type: "number", min: 0 },
             { id: "doorHeight", label: "Daylight Height (mm):", type: "number", min: 0 }
         ],
@@ -123,6 +136,7 @@ const calculators = {
         title: "Internal Door Calculator",
         description: "Determine the size a Internal Door needs to be based on the house daylight sizes. (For First Measure)",
         inputs: [
+            { id: "jobName", label: "Job Name:", type: "text" },
             { id: "houseWidth", label: "Daylight Width (mm):", type: "number", min: 0 },
             { id: "houseHeight", label: "Daylight Height (mm):", type: "number", min: 0 }
         ],
@@ -143,15 +157,24 @@ const calculators = {
         inputs: [
             { id: "crimWidth", label: "Door Width (mm):", type: "number", min: 0 },
             { id: "crimHeight", label: "Door Height (mm):", type: "number", min: 0 },
-            { id: "midRailHeight", label: "Mid Rail (mm) If applicable:", type: "number", min: 0 }
+            { id: "midRailHeight", label: "Mid Rail (mm) If applicable:", type: "number", min: 0 },
+            { id: "crimsafeType", label: "Crimsafe Type:", type: "radio", options: [
+                { value: "classic", label: "Classic" },
+                { value: "ultimate", label: "Ultimate" }
+            ], default: "ultimate" }
         ],
         calculate: function(values) {
             let doorWidth = values.crimWidth;
             let doorHeight = values.crimHeight;
-            let meshWidth = doorWidth - 114;
             let midRailHeight = values.midRailHeight;
+            let crimsafeType = values.crimsafeType || "ultimate"; // default to ultimate
 
-            return buildCrimsafeMeshOnlyLines(doorWidth, doorHeight, meshWidth, midRailHeight).replace(/<br>$/, '');
+            return buildCrimsafeMeshOnlyLines(
+                doorWidth,
+                doorHeight,
+                midRailHeight,
+                crimsafeType
+            ).replace(/<br>$/, '');
         }
     },
 
@@ -160,6 +183,7 @@ const calculators = {
         title: "Main Door Cutting/Making Calculator",
         description: "Calculate cutting and making sizes for Lifestyle or Crim doors.",
         inputs: [
+            { id: "jobName", label: "Job Name:", type: "text" },
             { id: "screenDoorWidth", label: "Door Width (mm):", type: "number", min: 0 },
             { id: "screenDoorHeight", label: "Door Height (mm):", type: "number", min: 0 },
             { id: "handleHeight", label: "Handle Height (mm):", type: "number", min: 0 },
@@ -176,7 +200,8 @@ const calculators = {
             { id: "buildoutBottom", label: "Bottom", type: "checkbox" },
             { id: "doorType", label: "Door Type:", type: "radio", options: [
                 { value: "lifestyle", label: "Lifestyle" },
-                { value: "crimsafe", label: "Crimsafe" }
+                { value: "crimsafe", label: "Crimsafe Classic" },
+                { value: "crimsafeUltimate", label: "Crimsafe Ultimate" }
             ]},
             { id: "doorOrientation", label: "Hinged on:", type: "radio", options: [
                 { value: "left", label: "Left" },
@@ -194,6 +219,10 @@ const calculators = {
 
             let output = "";
 
+            // Map doorType to crimsafeType for helpers
+            let crimsafeType = doorType === 'crimsafe' ? 'classic' :
+                            doorType === 'crimsafeUltimate' ? 'ultimate' : null;
+
             if (frameType === 'hinged') {
                 output +=
                     `Door Width = ${width}mm (+ 100 for P/C)<br>` +
@@ -206,9 +235,9 @@ const calculators = {
                         `Grill Cut at ${width - 120}mm x ${height - 120}mm<br>` +
                         `Overall Door Frame Cut Length = ${(width * 2) + (height * 2)}mm<br>` +
                         `Overall BugStrip Cut Length = ${(height + 100) * 2 + (width + 100)}mm<br>`;
-                } else if (doorType === 'crimsafe') {
+                } else if (crimsafeType) {
                     output +=
-                        buildCrimsafeDoorLines(width, height, width - 114, midRailHeight) +
+                        buildCrimsafeDoorLines(width, height, midRailHeight, crimsafeType) +
                         `Overall Door Frame Cut Length = ${(width + 100) * 2 + (height + 100) * 2}mm (Same Length for Covers)<br>` +
                         `Overall BugStrip Cut Length = ${(height + 100) * 2 + (width + 100)}mm<br>`;
                 }
@@ -225,10 +254,10 @@ const calculators = {
                 }
 
                 const buildoutDoorWidth =
-                    width - (selectedSides.left ? 24 : 3) - (selectedSides.right ? 24 : 3);
+                    width - (selectedSides.left ? 21 : 3) - (selectedSides.right ? 21 : 3);
 
                 const buildoutDoorHeight =
-                    height - (selectedSides.top ? 24 : 3) - (selectedSides.bottom ? 24 : 3);
+                    height - (selectedSides.top ? 21 : 3) - (selectedSides.bottom ? 21 : 3);
 
                 const buildoutSides = [
                     selectedSides.left ? 'Left' : '',
@@ -257,13 +286,13 @@ const calculators = {
                         `Grill Cut at ${buildoutDoorWidth - 120}mm x ${buildoutDoorHeight - 120}mm<br>` +
                         `Overall B/O Frame Cut Length = ${overallBuildoutFrameCutLength}mm<br>` +
                         `Overall Door Frame Cut Length = ${((buildoutDoorWidth + 100) * 2) + ((buildoutDoorHeight + 100) * 2)}mm<br>`;
-                } else if (doorType === 'crimsafe') {
+                } else if (crimsafeType) {
                     output +=
                         buildCrimsafeDoorLines(
                             buildoutDoorWidth,
                             buildoutDoorHeight,
-                            buildoutDoorWidth - 114,
-                            midRailHeight
+                            midRailHeight,
+                            crimsafeType
                         ) +
                         `Overall B/O Frame Cut Length = ${overallBuildoutFrameCutLength}mm<br>` +
                         `Overall Door Frame Cut Length = ${((buildoutDoorWidth + 100) * 2) + ((buildoutDoorHeight + 100) * 2)}mm (Same Length for Covers)<br>`;
@@ -284,9 +313,9 @@ const calculators = {
                         `Grill Cut at ${width - 133}mm x ${height - 128}mm<br>` +
                         `Overall Apt Frame Cut Length = ${(width + 100) + (height + 100) * 2}mm (Same Length for Covers)<br>` +
                         `Overall Door Frame Cut Length = ${(height + 92) * 2 + (width + 87) * 2}mm<br>`;
-                } else if (doorType === 'crimsafe') {
+                } else if (crimsafeType) {
                     output +=
-                        buildCrimsafeDoorLines(adapterDoorWidth, adapterDoorHeight, width - 127, midRailHeight) +
+                        buildCrimsafeDoorLines(adapterDoorWidth, adapterDoorHeight, midRailHeight, crimsafeType) +
                         `Overall Apt Frame Cut Length = ${(width + 100) + (height + 100) * 2}mm (Same Length for Covers)<br>` +
                         `Overall Door Frame Cut Length = ${(height + 92) * 2 + (width + 87) * 2}mm (Same Length for Covers)<br>`;
                 }
@@ -300,6 +329,7 @@ const calculators = {
         title: "Main Slider Cutting/Making Calculator",
         description: "Calculate cutting and making sizes for Lifestyle or Crim slider doors.",
         inputs: [
+            { id: "jobName", label: "Job Name:", type: "text" },
             { id: "zFrameWidth", label: "Z Frame Width (mm):", type: "number", min: 0 },
             { id: "zFrameHeight", label: "Z Frame Height (mm):", type: "number", min: 0 },
             { id: "doorPanelWidth", label: "Door Panel Width (mm):", type: "number", min: 0 },
@@ -310,7 +340,8 @@ const calculators = {
             { id: "internalFit", label: "Internal Fit", type: "checkbox" },
             { id: "doorType", label: "Door Type:", type: "radio", options: [
                 { value: "lifestyle", label: "Lifestyle" },
-                { value: "crimsafe", label: "Crimsafe" }
+                { value: "crimsafe", label: "Crimsafe Classic" },
+                { value: "crimsafeUltimate", label: "Crimsafe Ultimate" }
             ]},
             { id: "doorOrientation", label: "Closes to the:", type: "radio", options: [
                 { value: "left", label: "Left" },
@@ -328,6 +359,9 @@ const calculators = {
             const orientation = values.doorOrientation;
             const boxSection = values.boxSection;
             const internalFit = values.internalFit;
+
+            let crimsafeType = doorType === 'crimsafe' ? 'classic' :
+                            doorType === 'crimsafeUltimate' ? 'ultimate' : null;
 
             const doorHeight = zHeight - (internalFit ? 36 : 74);
             const lifestyleDoorWidth = (width + mullion) - (internalFit ? 19 : 36);
@@ -373,14 +407,14 @@ const calculators = {
                 output +=
                     `Overall Roller Track = ${zWidth + 100}mm<br>` +
                     `Overall Draft Strip = ${draftStrip + 100}mm<br>`;
-            } else if (doorType === 'crimsafe') {
+            } else if (crimsafeType) {
                 output +=
                     `Door Width = ${crimsafeDoorWidth}mm (+ 100 for P/C)<br>` +
                     `Door Height = ${doorHeight}mm (+ 100 for P/C)<br>` +
                     `Interlocker Flat Bar = ${interlockerFlatBar}mm (+ 100 for P/C)<br>` +
                     `Interlocker Z = ${interlockerZ}mm (+ 100 for P/C)<br>` +
                     `Interlocker L = ${interlockerL}mm (+ 100 for P/C)<br>` +
-                    buildCrimsafeDoorLines(crimsafeDoorWidth, doorHeight, crimsafeDoorWidth - 114, midRailHeight) +
+                    buildCrimsafeDoorLines(crimsafeDoorWidth, doorHeight, midRailHeight, crimsafeType) +
                     `Overall Door Frame Cut Length = ${((crimsafeDoorWidth + 100) * 2) + ((doorHeight + 100) * 2)}mm<br>` +
                     `Overall Z Frame Cut Length = ${((zWidth + 100) * 2) + ((zHeight + 100) * 2)}mm<br>`;
 
