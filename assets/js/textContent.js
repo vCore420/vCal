@@ -28,6 +28,11 @@ const textContent = {
       preview: "Precision calculators for production and assembly.",
       calculators: [
         {
+            key: "holeSpacing",
+            name: "Even Hole Spacing",
+            synopsis: "Calculate even spacing for holes in products.",
+        },
+        {
             key: "crimMeshSize",
             name: "Crim Mesh Size Calculator",
             synopsis: "Calculate mesh sizes for Crim doors."

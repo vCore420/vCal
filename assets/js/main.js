@@ -58,35 +58,58 @@ function updateBannerForDepartment(deptKey) {
   synopsisEl.textContent = dept.preview || textContent.app.synopsis;
 }
 
-function readCalculatorHistoryStore() {
-  try {
-    const raw = sessionStorage.getItem(CALCULATOR_HISTORY_KEY);
-    if (!raw) return {};
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed : {};
-  } catch (error) {
-    console.warn('Unable to read calculator history.', error);
-    return {};
-  }
+// IndexedDB setup
+let db;
+const DB_NAME = 'vCalDB';
+const DB_VERSION = 1;
+
+async function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('history')) {
+        db.createObjectStore('history');
+      }
+    };
+    request.onsuccess = (event) => {
+      db = event.target.result;
+      resolve(db);
+    };
+    request.onerror = (event) => reject(event.target.error);
+  });
 }
 
-function writeCalculatorHistoryStore(store) {
-  try {
-    sessionStorage.setItem(CALCULATOR_HISTORY_KEY, JSON.stringify(store));
-  } catch (error) {
-    console.warn('Unable to save calculator history.', error);
-  }
+async function readCalculatorHistoryStore() {
+  if (!db) db = await openDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['history'], 'readonly');
+    const store = transaction.objectStore('history');
+    const request = store.get('store'); // 'store' is our key for the history object
+    request.onsuccess = () => resolve(request.result || {});
+    request.onerror = () => reject(request.error);
+  });
 }
 
-function getCalculatorHistory(calcKey) {
-  const store = readCalculatorHistoryStore();
+async function writeCalculatorHistoryStore(store) {
+  if (!db) db = await openDB();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['history'], 'readwrite');
+    const storeObj = transaction.objectStore('history');
+    const request = storeObj.put(store, 'store'); // Save under key 'store'
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function getCalculatorHistory(calcKey) {
+  const store = await readCalculatorHistoryStore();
   return Array.isArray(store[calcKey]) ? store[calcKey] : [];
 }
 
-function saveCalculatorHistoryEntry(calcKey, calcTitle, inputSnapshot, result) {
-  const store = readCalculatorHistoryStore();
+async function saveCalculatorHistoryEntry(calcKey, calcTitle, inputSnapshot, result) {
+  const store = await readCalculatorHistoryStore();
   const currentHistory = Array.isArray(store[calcKey]) ? store[calcKey] : [];
-
   const entry = {
     id: String(Date.now()) + '-' + Math.random().toString(36).slice(2, 7),
     title: calcTitle,
@@ -94,9 +117,70 @@ function saveCalculatorHistoryEntry(calcKey, calcTitle, inputSnapshot, result) {
     result: result,
     createdAt: new Date().toISOString()
   };
+  store[calcKey] = [entry].concat(currentHistory).slice(0, 15); // Keep last 15 entries
+  await writeCalculatorHistoryStore(store);
+}
 
-  store[calcKey] = [entry].concat(currentHistory).slice(0, 15);
-  writeCalculatorHistoryStore(store);
+async function deleteCalculatorHistoryEntry(calcKey, index) {
+  const store = await readCalculatorHistoryStore();
+  if (Array.isArray(store[calcKey])) {
+    store[calcKey].splice(index, 1);
+    await writeCalculatorHistoryStore(store);
+  }
+}
+
+async function refreshCalculatorHistory(calcKey, calc) {
+  const historyHost = document.getElementById('calcHistoryHost');
+  if (!historyHost) return;
+  historyHost.innerHTML = await buildCalculatorHistoryMarkup(calcKey);
+  bindCalculatorHistoryEvents(calcKey, calc);
+}
+
+async function buildCalculatorHistoryMarkup(calcKey) {
+  const history = await getCalculatorHistory(calcKey);
+  if (!history.length) {
+    return (
+      '<div class="calc-history">' +
+        '<h3>History</h3>' +
+        '<p>No history available.</p>' +
+      '</div>'
+    );
+  }
+  return (
+    '<div class="calc-history">' +
+      '<h3>History</h3>' +
+      '<div class="calc-history-list">' +
+        history.map((entry, index) =>
+          '<div class="calc-history-item" data-index="' + index + '">' +
+            '<div class="calc-history-row">' +
+              '<span class="calc-history-title">' + entry.title + '</span>' +
+              '<span class="calc-history-time">' + formatCalculatorHistoryTime(entry.createdAt) + '</span>' +
+            '</div>' +
+            '<div class="calc-history-preview">' + buildHistoryPreview(entry.result) + '</div>' +
+            '<button class="calc-history-delete" type="button" aria-label="Delete history entry">×</button>' +
+          '</div>'
+        ).join('') +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function bindCalculatorHistoryEvents(calcKey, calc) {
+  const historyHost = document.getElementById('calcHistoryHost');
+  if (!historyHost) return;
+  historyHost.onclick = async function(event) {
+    const target = event.target;
+    if (target.classList.contains('calc-history-item')) {
+      const index = parseInt(target.dataset.index, 10);
+      await restoreCalculatorHistoryEntry(calcKey, calc, index);  // Now awaited
+    } else if (target.classList.contains('calc-history-delete')) {
+      event.stopPropagation();
+      const item = target.closest('.calc-history-item');
+      const index = parseInt(item.dataset.index, 10);
+      await deleteCalculatorHistoryEntry(calcKey, index);
+      await refreshCalculatorHistory(calcKey, calc); // Refresh after delete
+    }
+  };
 }
 
 function formatCalculatorHistoryTime(isoString) {
@@ -120,47 +204,6 @@ function buildHistoryPreview(resultHtml) {
   const text = stripHtmlToText(resultHtml);
   if (text.length <= 100) return text;
   return text.slice(0, 97) + '...';
-}
-
-function buildCalculatorHistoryMarkup(calcKey) {
-  const history = getCalculatorHistory(calcKey);
-
-  if (!history.length) {
-    return (
-      '<div class="calc-history">' +
-        '<h3>History</h3>' +
-        '<p class="calc-history-empty">No calculations saved yet for this calculator.</p>' +
-      '</div>'
-    );
-  }
-
-  return (
-    '<div class="calc-history">' +
-      '<h3>History</h3>' +
-      '<div class="calc-history-list">' +
-        history.map(function(entry, index) {
-          return (
-            '<div class="calc-history-item" data-index="' + index + '">' +
-              '<div class="calc-history-row">' +
-                '<div class="calc-history-title">' + (entry.title || 'Untitled') + '</div>' +
-                '<button class="calc-history-delete" title="Delete Entry" data-index="' + index + '">&times;</button>' +
-              '</div>' +
-              '<div class="calc-history-time">' + formatCalculatorHistoryTime(entry.createdAt) + '</div>' +
-              '<div class="calc-history-preview">' + buildHistoryPreview(entry.result) + '</div>' +
-            '</div>'
-          );
-        }).join('') +
-      '</div>' +
-    '</div>'
-  );
-}
-
-function refreshCalculatorHistory(calcKey, calc) {
-  const historyHost = document.getElementById('calcHistoryHost');
-  if (!historyHost) return;
-
-  historyHost.innerHTML = buildCalculatorHistoryMarkup(calcKey);
-  bindCalculatorHistoryEvents(calcKey, calc);
 }
 
 function readCalculatorInputSnapshot(calc) {
@@ -203,8 +246,8 @@ function buildCalculatorValuesFromSnapshot(calc, snapshot) {
   return values;
 }
 
-function restoreCalculatorHistoryEntry(calcKey, calc, index) {
-  const history = getCalculatorHistory(calcKey);
+async function restoreCalculatorHistoryEntry(calcKey, calc, index) {
+  const history = await getCalculatorHistory(calcKey);  // Now awaited
   const entry = history[index];
   if (!entry) return;
 
@@ -236,38 +279,6 @@ function restoreCalculatorHistoryEntry(calcKey, calc, index) {
   if (resultEl) {
     resultEl.innerHTML = entry.result;
   }
-}
-
-function deleteCalculatorHistoryEntry(calcKey, index) {
-  const store = readCalculatorHistoryStore();
-  if (!Array.isArray(store[calcKey])) return;
-  store[calcKey].splice(index, 1);
-  writeCalculatorHistoryStore(store);
-}
-
-function bindCalculatorHistoryEvents(calcKey, calc) {
-  const historyHost = document.getElementById('calcHistoryHost');
-  if (!historyHost) return;
-
-  historyHost.onclick = function(event) {
-    // Delete button logic
-    if (event.target.classList.contains('calc-history-delete')) {
-      const index = parseInt(event.target.getAttribute('data-index'), 10);
-      if (!isNaN(index)) {
-        deleteCalculatorHistoryEntry(calcKey, index);
-        refreshCalculatorHistory(calcKey, calc);
-      }
-      event.stopPropagation();
-      return;
-    }
-
-    // Restore logic
-    const historyItem = event.target.closest('.calc-history-item');
-    if (!historyItem) return;
-    const index = parseInt(historyItem.getAttribute('data-index'), 10);
-    if (Number.isNaN(index)) return;
-    restoreCalculatorHistoryEntry(calcKey, calc, index);
-  };
 }
 
 function formatCalculatorResult(resultHtml) {
@@ -628,7 +639,7 @@ function openProductInfo(productKey) {
   `;
 }
 
-function openCalculator(calcKey) {
+async function openCalculator(calcKey) {
   showSection('calculator-logic-container');
 
   const logicContainer = document.getElementById('calculator-logic-container');
@@ -699,7 +710,9 @@ function openCalculator(calcKey) {
       '<button type="button" class="button calc-copy-btn" id="calcCopyBtn">Copy Result</button>' +
     '</div>' +
     '<div id="calcResult"></div>' +
-    '<div id="calcHistoryHost">' + buildCalculatorHistoryMarkup(calcKey) + '</div>';
+    '<div id="calcHistoryHost"></div>';
+
+  await refreshCalculatorHistory(calcKey, calc);
 
   (function setupBuildoutSideControls() {
     const frameTypeInputs = logicContainer.querySelectorAll('input[name="frameType"]');

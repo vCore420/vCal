@@ -3,8 +3,10 @@
 function getCrimsafeParams(type) {
     if (type === "classic") {
         return { meshOffset: 114, frameDeduction: 57, meshGap: 10 };
-    } else { // ultimate (default)
+    } else if (type === "ultimate") { // ultimate (default)
         return { meshOffset: 122, frameDeduction: 61, meshGap: 10 };
+    } else if (type === "window") {
+        return { meshOffset: 40, frameDeduction: 20, meshGap: 10 };
     }
 }
 
@@ -68,19 +70,29 @@ function buildCrimsafeDoorLines(doorWidth, doorHeight, midRailHeight, crimsafeTy
         return meshData.error + '<br>';
     }
 
+    let output = '';
+
     if (!meshData.hasMidRail) {
-        return 'Mesh Cut at ' + meshData.meshWidth.toFixed(0) + 'mm x ' + meshData.fullMeshHeight.toFixed(0) + 'mm<br>';
+        output = 'Mesh Cut at ' + meshData.meshWidth.toFixed(0) + 'mm x ' + meshData.fullMeshHeight.toFixed(0) + 'mm<br>';
+    } else {
+        output = (
+            'Mid Rail Centre = ' + meshData.midRailHeight.toFixed(0) + 'mm up from bottom of door<br>' +
+            'Bottom Mesh Cut at ' + meshData.meshWidth.toFixed(0) + 'mm x ' + meshData.bottomMeshHeight.toFixed(0) + 'mm<br>' +
+            'Top Mesh Cut at ' + meshData.meshWidth.toFixed(0) + 'mm x ' + meshData.topMeshHeight.toFixed(0) + 'mm<br>' +
+            'Mid Rail = ' + meshData.doorWidth.toFixed(0) + 'mm (+ 100 for P/C)<br>' +
+            'Mid Rail Cover = ' + meshData.doorWidth.toFixed(0) + 'mm (+ 100 for P/C)<br>' +
+            'Overall Mid Rail = ' + (meshData.doorWidth + 100).toFixed(0) + 'mm<br>' +
+            'Overall Mid Rail Cover = ' + (meshData.doorWidth + 100).toFixed(0) + 'mm<br>'
+        );
     }
 
-    return (
-        'Mid Rail Centre = ' + meshData.midRailHeight.toFixed(0) + 'mm up from bottom of door<br>' +
-        'Bottom Mesh Cut at ' + meshData.meshWidth.toFixed(0) + 'mm x ' + meshData.bottomMeshHeight.toFixed(0) + 'mm<br>' +
-        'Top Mesh Cut at ' + meshData.meshWidth.toFixed(0) + 'mm x ' + meshData.topMeshHeight.toFixed(0) + 'mm<br>' +
-        'Mid Rail = ' + meshData.doorWidth.toFixed(0) + 'mm (+ 100 for P/C)<br>' +
-        'Mid Rail Cover = ' + meshData.doorWidth.toFixed(0) + 'mm (+ 100 for P/C)<br>' +
-        'Overall Mid Rail = ' + (meshData.doorWidth + 100).toFixed(0) + 'mm<br>' +
-        'Overall Mid Rail Cover = ' + (meshData.doorWidth + 100).toFixed(0) + 'mm<br>'
-    );
+    // Add clamp output ONLY for Ultimate type
+    if (crimsafeType === 'ultimate') {
+        output += 'Clamp Width = ' + (meshData.doorWidth - 120).toFixed(0) + 'mm<br>' +
+                  'Clamp Height = ' + (doorHeight - 160).toFixed(0) + 'mm<br>';
+    }
+
+    return output;
 }
 
 function getBuildoutSideDeductions(buildoutConfig) {
@@ -160,7 +172,8 @@ const calculators = {
             { id: "midRailHeight", label: "Mid Rail (mm) If applicable:", type: "number", min: 0 },
             { id: "crimsafeType", label: "Crimsafe Type:", type: "radio", options: [
                 { value: "classic", label: "Classic" },
-                { value: "ultimate", label: "Ultimate" }
+                { value: "ultimate", label: "Ultimate" },
+                { value: "window", label: "Window Frame" }
             ], default: "ultimate" }
         ],
         calculate: function(values) {
@@ -521,14 +534,17 @@ const calculators = {
         title: "Ziptrak Spring Tension/Turns",
         description: "Find out how much tension 'turns' a Ziptrak spring needs. (Use as Guide, Higher Number for Exposed Areas)",
         inputs: [
-            { id: "zipTrackWidth", label: "Width (m):", type: "number", min: 0, step: 0.1 },
-            { id: "zipTrackHeight", label: "Height (m):", type: "number", min: 0, step: 0.1 },
+            { id: "zipTrackWidth", label: "Width (mm):", type: "number", min: 0, step: 1 },
+            { id: "zipTrackHeight", label: "Height (mm):", type: "number", min: 0, step: 1 },
             { id: "secondSpring", label: "2nd Spring?", type: "checkbox" },
             { id: "heavyDutyBar", label: "Heavy Duty Bar?", type: "checkbox" }
         ],
         calculate: function(values) {
-            let width = Math.min(8, Math.round(values.zipTrackWidth * 2) / 2);
-            let height = Math.min(8, Math.round(values.zipTrackHeight * 2) / 2);
+            const widthMeters = values.zipTrackWidth / 1000;
+            const heightMeters = values.zipTrackHeight / 1000;
+
+            let width = Math.min(8, Math.round(widthMeters * 2) / 2);
+            let height = Math.min(8, Math.round(heightMeters * 2) / 2);
 
             const turnsTable = {
             '0.5': { '0.5': '8 - 10', '1': '9 - 11', '1.5': '10 - 12', '2': '11 - 13', '2.5': '12 - 14', '3': '13 - 15', '3.5': '14 - 16', '4': '15 - 17', '4.5': '16 - 18', '5': '17 - 19', '5.5': '18 - 20', '6': '19 - 21', '6.5': '20 - 22', '7': '21 - 23', '7.5': '22 - 24', '8': '23 - 25' },

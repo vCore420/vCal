@@ -96,61 +96,12 @@ p {
   color: var(--dark-text);
 }
 
-.card-modal {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  position: fixed;
-  left: 0; top: 0; width: 100%; height: 100%;
-  background: rgba(16, 21, 23, 0.72);
-  z-index: 10;
-  margin-top: 10em;
-}
-
-.card-modal-content {
-  background: var(--dark-banner);
-  border-radius: 18px;
-  box-shadow: var(--dark-shadow);
-  padding: 2em 2.5em;
-  max-width: 400px;
-  width: 90%;
-  max-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: auto;
-  position: relative;
-}
-
-/* Card styles */
-.card {
-  background: var(--card-bg);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
-  max-width: 100%;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-}
-
-.card-label {
-  font-size: 1.55rem;
-  margin-bottom: 0.85em;
-  letter-spacing: -0.01em;
-}
-
-.card-thumb {
-  max-width: 128px;
-}
-
 /* Liquid glass effect */
 .liquid-glass {
   min-width: 280px;
 }
 
-.card .button {
+.button {
   width: 100%;
   margin-top: auto;
 }
