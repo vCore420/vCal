@@ -455,8 +455,9 @@ body.theme-light .calc-history-item {
 }
 
 .calc-history-delete {
-  position: static; 
-  margin-right: 1em;
+  position: absolute; 
+  right: 0.6em;
+  top: 0.3em;
   color: #c00;
   font-size: 1.2em;
   cursor: pointer;
@@ -473,6 +474,13 @@ body.theme-light .calc-history-item {
 .calc-history-delete:hover {
   opacity: 1;
   color: #f33;
+}
+
+.calc-history-time {
+  position: absolute; 
+  right: 3em;
+  background: transparent;
+  border: none;
 }
 
 .calc-copy-btn {
