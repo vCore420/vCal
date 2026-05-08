@@ -267,10 +267,10 @@ const calculators = {
                 }
 
                 const buildoutDoorWidth =
-                    width - (selectedSides.left ? 21 : 3) - (selectedSides.right ? 21 : 3);
+                    width - (selectedSides.left ? 24 : 3) - (selectedSides.right ? 24 : 3);
 
                 const buildoutDoorHeight =
-                    height - (selectedSides.top ? 21 : 3) - (selectedSides.bottom ? 21 : 3);
+                    height - (selectedSides.top ? 24 : 3) - (selectedSides.bottom ? 24 : 3);
 
                 const buildoutSides = [
                     selectedSides.left ? 'Left' : '',
