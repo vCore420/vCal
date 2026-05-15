@@ -98,9 +98,15 @@ const textContent = {
                 heading: "Product Info",
                 content: [
                 // Main Features and selling points of the product
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
+                  "LifeStyle:",
+                  "5 times stronger than standard Diamond Grill Doors",
+                  "Strong 7mm aluminium diamond grille system plus deeper channels",
+                  "Deeper screw method, no rivets to prevent buckling",
+                  "Crimsafe:",
+                  "Enjoy a superiour level of secuirty without blocking out the fresh air and breezes",
+                  "Crimsafes unique Screw-Clamp technology means no unsightly bars and grilles to restrict your views",
+                  "New Zealand made. Manufactured in our Wellington factory",
+                  "We back our product with a 10 year structural and installation warranty to give you Peace of Mind!"
                 ]
               },
               {
@@ -115,10 +121,15 @@ const textContent = {
               {
                   heading: "Links",
                   content: [
-                  // hpyer links o products website and other useful links 
-                    "Placeholder",
-                    "Placeholder",
-                    "Placeholder"
+                  // hpyer links to products website and other useful links 
+                    "Crimsafe Brochure:",
+                    "https://crimsafe.nz/wp-content/uploads/2022/07/Crimsafe-NZ_Residential-Brochure_202207.pdf",
+                    "Crimsafe Ultimate:",
+                    "https://crimsafe.nz/products/crimsafe-ultimate/",
+                    "Care Guide:",
+                    "https://crimsafe.nz/wp-content/uploads/2020/11/200925-NZ-Care-Guide-A4-Web-CS20006_final.pdf",
+                    "Crimsafe Hinged Doors:",
+                    "https://crimsafe.nz/product/hinged-doors/"
                   ]
               }
               // Add more sections as needed
