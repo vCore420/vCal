@@ -605,7 +605,7 @@ const calculators = {
         title: "Stock Optimiser",
         description: "Optimise how to cut required lengths from multiple stock lengths. Enter stock sources with max quantities and the required cuts.",
         inputs: [
-            { id: "stockSourcesInput", label: "Stock sources (rows of length + max qty):", type: "rows", rowFields: ["length", "qty"] },
+            { id: "stockSourcesInput", label: "Stock sources (rows of length + max qty):", type: "rows", rowFields: ["length", "qty", "preferred"] },
             { id: "cutsInput", label: "Cuts (rows of length + qty):", type: "rows", rowFields: ["length", "qty"] }
         ],
         calculate: function(values) {
@@ -614,20 +614,21 @@ const calculators = {
                 for (let row of values.stockSourcesInput) {
                     const length = Number(row.width);
                     const qty = row.qty !== undefined ? Number(row.qty) : 1;
+                    const preferred = row.preferred === true || row.preferred === 'true' || row.preferred === 1;
                     if (!Number.isFinite(length) || !Number.isFinite(qty) || length <= 0 || qty <= 0) return `Invalid stock source row: ${JSON.stringify(row)}`;
-                    stockSources.push({ length: length, qty: qty });
+                    stockSources.push({ length: length, qty: qty, preferred: preferred });
                 }
             } else {
                 const raw = (values.stockSourcesInput || '').trim();
                 if (!raw) return 'Enter stock sources in the format: 5200 x 19, 4200 x 26';
                 const parts = raw.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
                 for (let p of parts) {
-                    const m = p.match(/^(\\d+)\\s*(?:[xX×\\*]?\\s*(\\d+))?$/);
+                    const m = p.match(/^(\d+)\s*(?:[xX×\*]?\s*(\d+))?$/);
                     if (!m) return `Invalid stock source format: ${p}`;
                     const length = Number(m[1]);
                     const qty = m[2] ? Number(m[2]) : 1;
                     if (length <= 0 || qty <= 0) return `Invalid numbers in: ${p}`;
-                    stockSources.push({ length: length, qty: qty });
+                    stockSources.push({ length: length, qty: qty, preferred: false });
                 }
             }
 
@@ -665,7 +666,7 @@ const calculators = {
             if (pieces.length === 0) return 'No pieces parsed.';
 
             const stockInventory = stockSources.map(function(source) {
-                return { length: source.length, maxQty: source.qty, usedQty: 0 };
+                return { length: source.length, maxQty: source.qty, usedQty: 0, preferred: !!source.preferred };
             }).sort(function(a, b) {
                 return a.length - b.length;
             });
@@ -695,7 +696,15 @@ const calculators = {
                         return stock.usedQty < stock.maxQty && stock.length >= piece;
                     })
                     .sort(function(a, b) {
-                        return (a.length - piece) - (b.length - piece) || a.length - b.length;
+                        // prefer preferred stocks first
+                        const pa = a.preferred ? 0 : 1;
+                        const pb = b.preferred ? 0 : 1;
+                        if (pa !== pb) return pa - pb;
+                        // then prefer minimal leftover after placing the piece
+                        const ra = a.length - piece;
+                        const rb = b.length - piece;
+                        if (ra !== rb) return ra - rb;
+                        return a.length - b.length;
                     })[0];
 
                 if (!candidateStock) {

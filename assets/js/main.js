@@ -228,11 +228,13 @@ function readCalculatorInputSnapshot(calc) {
           const wEl = item.querySelector('.row-width');
           const hEl = item.querySelector('.row-height');
           const qEl = item.querySelector('.row-qty');
+          const pEl = item.querySelector('.row-preferred');
           const row = {
             width: wEl ? (wEl.value === '' ? '' : Number(wEl.value)) : '',
             height: hEl ? (hEl.value === '' ? '' : Number(hEl.value)) : '',
             qty: qEl ? (qEl.value === '' ? 1 : Number(qEl.value)) : 1
           };
+          if (pEl) row.preferred = Boolean(pEl.checked);
           rows.push(row);
         });
       }
@@ -944,7 +946,8 @@ function createRowElement(rowData, fields) {
     length: { className: 'row-width', placeholder: 'length', width: '90px' },
     width: { className: 'row-width', placeholder: 'width', width: '90px' },
     height: { className: 'row-height', placeholder: 'height', width: '90px' },
-    qty: { className: 'row-qty', placeholder: 'qty', width: '70px' }
+    qty: { className: 'row-qty', placeholder: 'qty', width: '70px' },
+    preferred: { className: 'row-preferred', placeholder: 'preferred', width: '40px' }
   };
 
   if (!Array.isArray(fields)) fields = ['width', 'height', 'qty'];
@@ -953,16 +956,25 @@ function createRowElement(rowData, fields) {
     const config = fieldConfigs[fieldName];
     if (!config) return;
 
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.className = config.className;
-    input.placeholder = config.placeholder;
-    input.min = '0';
-    input.style.width = config.width;
+    let input;
+    if (fieldName === 'preferred') {
+      input = document.createElement('input');
+      input.type = 'checkbox';
+      input.className = config.className;
+      input.style.width = config.width;
+      input.checked = rowData && (rowData.preferred === true || rowData.preferred === 'true');
+    } else {
+      input = document.createElement('input');
+      input.type = 'number';
+      input.className = config.className;
+      input.placeholder = config.placeholder;
+      input.min = '0';
+      input.style.width = config.width;
 
-    const dataKey = fieldName === 'length' ? 'width' : fieldName;
-    input.value = rowData && rowData[dataKey] !== undefined ? rowData[dataKey] : '';
-    if (fieldName === 'qty') input.value = rowData && rowData.qty !== undefined ? rowData.qty : 1;
+      const dataKey = fieldName === 'length' ? 'width' : fieldName;
+      input.value = rowData && rowData[dataKey] !== undefined ? rowData[dataKey] : '';
+      if (fieldName === 'qty') input.value = rowData && rowData.qty !== undefined ? rowData.qty : 1;
+    }
 
     item.appendChild(input);
   });
