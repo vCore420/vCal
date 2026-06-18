@@ -600,27 +600,46 @@ const calculators = {
         }
     },
 
-    // Stock Optimiser - cut optimisation for linear stock lengths
+    // Stock Optimiser - cut optimisation for multiple stock lengths
     stockOptimiser: {
         title: "Stock Optimiser",
-        description: "Optimise how to cut required lengths from a stock length. Enter cuts as lines or comma-separated values like '1000 x 2, 1800 x 2'.",
+        description: "Optimise how to cut required lengths from multiple stock lengths. Enter stock sources with max quantities and the required cuts.",
         inputs: [
-            { id: "stockLength", label: "Stock Length (mm):", type: "number", min: 1 },
+            { id: "stockSourcesInput", label: "Stock sources (rows of length + max qty):", type: "rows", rowFields: ["length", "qty"] },
             { id: "cutsInput", label: "Cuts (rows of length + qty):", type: "rows", rowFields: ["length", "qty"] }
         ],
         calculate: function(values) {
-            const stock = Number(values.stockLength);
-            if (!Number.isFinite(stock) || stock <= 0) return 'Enter a valid stock length.';
+            const stockSources = [];
+            if (Array.isArray(values.stockSourcesInput)) {
+                for (let row of values.stockSourcesInput) {
+                    const length = Number(row.width);
+                    const qty = row.qty !== undefined ? Number(row.qty) : 1;
+                    if (!Number.isFinite(length) || !Number.isFinite(qty) || length <= 0 || qty <= 0) return `Invalid stock source row: ${JSON.stringify(row)}`;
+                    stockSources.push({ length: length, qty: qty });
+                }
+            } else {
+                const raw = (values.stockSourcesInput || '').trim();
+                if (!raw) return 'Enter stock sources in the format: 5200 x 19, 4200 x 26';
+                const parts = raw.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+                for (let p of parts) {
+                    const m = p.match(/^(\\d+)\\s*(?:[xX×\\*]?\\s*(\\d+))?$/);
+                    if (!m) return `Invalid stock source format: ${p}`;
+                    const length = Number(m[1]);
+                    const qty = m[2] ? Number(m[2]) : 1;
+                    if (length <= 0 || qty <= 0) return `Invalid numbers in: ${p}`;
+                    stockSources.push({ length: length, qty: qty });
+                }
+            }
 
-            // Accept either array of rows [{width, qty}] or a legacy string
-            const pieces = [];
+            if (stockSources.length === 0) return 'Enter at least one stock source.';
+
+            const cuts = [];
             if (Array.isArray(values.cutsInput)) {
                 for (let row of values.cutsInput) {
-                    const len = Number(row.width);
+                    const length = Number(row.width);
                     const qty = row.qty !== undefined ? Number(row.qty) : 1;
-                    if (!Number.isFinite(len) || !Number.isFinite(qty) || len <= 0 || qty <= 0) return `Invalid row: ${JSON.stringify(row)}`;
-                    if (len > stock) return `Requested piece ${len}mm is longer than stock ${stock}mm.`;
-                    for (let i = 0; i < qty; i++) pieces.push(len);
+                    if (!Number.isFinite(length) || !Number.isFinite(qty) || length <= 0 || qty <= 0) return `Invalid cut row: ${JSON.stringify(row)}`;
+                    cuts.push({ length: length, qty: qty });
                 }
             } else {
                 const raw = (values.cutsInput || '').trim();
@@ -629,21 +648,32 @@ const calculators = {
                 for (let p of parts) {
                     const m = p.match(/^(\\d+)\\s*(?:[xX×\\*]?\\s*(\\d+))?$/);
                     if (!m) return `Invalid cut format: ${p}`;
-                    const len = Number(m[1]);
+                    const length = Number(m[1]);
                     const qty = m[2] ? Number(m[2]) : 1;
-                    if (len <= 0 || qty <= 0) return `Invalid numbers in: ${p}`;
-                    if (len > stock) return `Requested piece ${len}mm is longer than stock ${stock}mm.`;
-                    for (let i = 0; i < qty; i++) pieces.push(len);
+                    if (length <= 0 || qty <= 0) return `Invalid numbers in: ${p}`;
+                    cuts.push({ length: length, qty: qty });
+                }
+            }
+
+            const pieces = [];
+            for (let row of cuts) {
+                for (let i = 0; i < row.qty; i++) {
+                    pieces.push(row.length);
                 }
             }
 
             if (pieces.length === 0) return 'No pieces parsed.';
 
-            // Best-Fit Decreasing: sort pieces descending and place each into the bin with smallest remaining space that fits
-            pieces.sort((a, b) => b - a);
-            const bins = []; // each bin: { remaining, items: [lengths] }
+            const stockInventory = stockSources.map(function(source) {
+                return { length: source.length, maxQty: source.qty, usedQty: 0 };
+            }).sort(function(a, b) {
+                return a.length - b.length;
+            });
 
-            for (let piece of pieces) {
+            const sortedPieces = pieces.slice().sort(function(a, b) { return b - a; });
+            const bins = []; // each bin: { stockLength, remaining, items: [lengths] }
+
+            for (let piece of sortedPieces) {
                 let bestIndex = -1;
                 let bestRem = Infinity;
                 for (let i = 0; i < bins.length; i++) {
@@ -653,37 +683,65 @@ const calculators = {
                         bestIndex = i;
                     }
                 }
-                if (bestIndex === -1) {
-                    bins.push({ remaining: stock - piece, items: [piece] });
-                } else {
+
+                if (bestIndex >= 0) {
                     bins[bestIndex].items.push(piece);
                     bins[bestIndex].remaining -= piece;
+                    continue;
                 }
+
+                const candidateStock = stockInventory
+                    .filter(function(stock) {
+                        return stock.usedQty < stock.maxQty && stock.length >= piece;
+                    })
+                    .sort(function(a, b) {
+                        return (a.length - piece) - (b.length - piece) || a.length - b.length;
+                    })[0];
+
+                if (!candidateStock) {
+                    return 'Not enough stock available to cut all requested pieces with the given stock sources.';
+                }
+
+                candidateStock.usedQty += 1;
+                bins.push({ stockLength: candidateStock.length, remaining: candidateStock.length - piece, items: [piece] });
             }
 
-            const totalPiecesLength = pieces.reduce((s, v) => s + v, 0);
-            const totalStockUsed = bins.length * stock;
-            const totalWaste = totalStockUsed - totalPiecesLength;
+            const totalPiecesLength = pieces.reduce(function(sum, len) { return sum + len; }, 0);
+            let totalWaste = 0;
+            const summaryLines = [];
 
-            // Build readable output
-            let out = `Stock Length ${stock}mm, Sheets Used: ${bins.length}\n`;
-            let totalUsedPerAll = 0;
-            for (let i = 0; i < bins.length; i++) {
-                const bin = bins[i];
+            bins.forEach(function(bin) {
                 const counts = {};
                 let used = 0;
-                for (let it of bin.items) {
-                    counts[it] = (counts[it] || 0) + 1;
-                    used += it;
-                }
-                totalUsedPerAll += used;
-                const partsList = Object.keys(counts).sort((a,b)=>b-a).map(k => `${k} x ${counts[k]}`);
-                out += `Sheet ${i+1}: ${partsList.join(', ')}, total ${used}mm, waste ${bin.remaining}mm\n`;
-            }
+                bin.items.forEach(function(item) {
+                    counts[item] = (counts[item] || 0) + 1;
+                    used += item;
+                });
+                const parts = Object.keys(counts).sort(function(a, b) { return b - a; }).map(function(k) {
+                    return `${k} x ${counts[k]}`;
+                }).join(', ');
+                totalWaste += bin.remaining;
+                summaryLines.push(`Stock ${bin.stockLength}mm: ${parts}, used ${used}mm, waste ${bin.remaining}mm`);
+            });
 
-            out += `\nGrand Total Pieces Length: ${totalPiecesLength}mm\n`;
-            out += `Total Used From Stock: ${totalUsedPerAll}mm\n`;
-            out += `Total Waste: ${totalWaste}mm`;
+            const unusedStockLines = stockInventory
+                .filter(function(stock) { return stock.usedQty < stock.maxQty; })
+                .map(function(stock) {
+                    return `${stock.length}mm x ${stock.maxQty - stock.usedQty}`;
+                });
+
+            let out = 'Stock sources used: ' + stockInventory.map(function(stock) {
+                return `${stock.length}mm x ${stock.maxQty}`;
+            }).join(', ') + '\n\n';
+            out += 'Cuts required: ' + pieces.length + ' pieces (' + totalPiecesLength + 'mm total)\n\n';
+            out += 'Pieces allocation:\n';
+            summaryLines.forEach(function(line) {
+                out += line + '\n';
+            });
+            out += '\nTotal Waste: ' + totalWaste + 'mm\n';
+            if (unusedStockLines.length) {
+                out += 'Unused stock available: ' + unusedStockLines.join(', ') + '\n';
+            }
 
             return out.replace(/\n/g, '<br>');
         }
