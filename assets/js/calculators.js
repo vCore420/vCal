@@ -811,12 +811,44 @@ const calculators = {
                 }
 
                 // Choose sheet size for new sheet: smallest area that can fit the piece
-                function chooseSheetSizeForPiece(piece) {
-                    const candidates = sheets.filter(s => (piece.w <= s.w && piece.h <= s.h) || (piece.h <= s.w && piece.w <= s.h));
-                    if (!candidates.length) return null;
-                    candidates.sort((a,b) => (a.w*a.h) - (b.w*b.h));
-                    return candidates[0];
-                }
+                function chooseSheetSizeForPiece(piece, remainingPieces) {
+
+    let bestSheet = null;
+    let bestScore = -1;
+
+    for (let sheet of sheets) {
+
+        // Can the current piece fit?
+        const currentFits =
+            (piece.w <= sheet.w && piece.h <= sheet.h) ||
+            (piece.h <= sheet.w && piece.w <= sheet.h);
+
+        if (!currentFits) continue;
+
+        // Count how many remaining pieces could also fit
+        let score = 0;
+
+        for (let other of remainingPieces) {
+
+            const fits =
+                (other.w <= sheet.w && other.h <= sheet.h) ||
+                (other.h <= sheet.w && other.w <= sheet.h);
+
+            if (fits) score++;
+        }
+
+        // Higher score wins
+        if (score > bestScore) {
+
+            bestScore = score;
+
+            bestSheet = sheet;
+
+        }
+    }
+
+    return bestSheet;
+}
 
                 // Place piece into a sheet using simple guillotine split
                 function placeInSheet(sheet, piece) {
@@ -863,7 +895,14 @@ const calculators = {
                         if (placeInSheet(s, piece)) { placed = true; break; }
                     }
                     if (!placed) {
-                        const size = chooseSheetSizeForPiece(piece);
+                        const remainingPieces = pieces.slice(
+    pieces.indexOf(piece) + 1
+);
+
+const size = chooseSheetSizeForPiece(
+    piece,
+    remainingPieces
+);
                         if (!size) return `No sheet size can fit piece ${piece.label}`;
                         const s = createSheet(size);
                         if (!placeInSheet(s, piece)) {
