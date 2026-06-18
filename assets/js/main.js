@@ -219,6 +219,24 @@ function readCalculatorInputSnapshot(calc) {
     } else if (input.type === 'select') {
       const element = document.getElementById(input.id);
       snapshot[input.id] = element ? element.value : '';
+    } else if (input.type === 'rows') {
+      const host = document.getElementById(input.id + '-rows');
+      const rows = [];
+      if (host) {
+        const items = host.querySelectorAll('.row-item');
+        items.forEach(function(item) {
+          const wEl = item.querySelector('.row-width');
+          const hEl = item.querySelector('.row-height');
+          const qEl = item.querySelector('.row-qty');
+          const row = {
+            width: wEl ? (wEl.value === '' ? '' : Number(wEl.value)) : '',
+            height: hEl ? (hEl.value === '' ? '' : Number(hEl.value)) : '',
+            qty: qEl ? (qEl.value === '' ? 1 : Number(qEl.value)) : 1
+          };
+          rows.push(row);
+        });
+      }
+      snapshot[input.id] = rows;
     } else {
       const element = document.getElementById(input.id);
       snapshot[input.id] = element ? element.value : '';
@@ -238,8 +256,13 @@ function buildCalculatorValuesFromSnapshot(calc, snapshot) {
       values[input.id] = Boolean(snapshot[input.id]);
     } else if (input.type === 'select') {
       values[input.id] = snapshot[input.id] || input.default || '';
-    } else {
+    } else if (input.type === 'number') {
       values[input.id] = parseFloat(snapshot[input.id]);
+    } else if (input.type === 'rows') {
+      values[input.id] = Array.isArray(snapshot[input.id]) ? snapshot[input.id] : [];
+    } else {
+      // text or other input types -> keep raw string
+      values[input.id] = (snapshot[input.id] !== undefined && snapshot[input.id] !== null) ? String(snapshot[input.id]) : '';
     }
   });
 
@@ -266,6 +289,15 @@ async function restoreCalculatorHistoryEntry(calcKey, calc, index) {
       const element = document.getElementById(input.id);
       if (element) {
         element.value = entry.inputs[input.id] || input.default || '';
+      }
+    } else if (input.type === 'rows') {
+      const fields = input.rowFields || ['width', 'height', 'qty'];
+      // Restore rows UI if rows data is present
+      if (Array.isArray(entry.inputs[input.id])) {
+        setRowsForHost(input.id, entry.inputs[input.id], fields);
+      } else {
+        // No rows array in entry (legacy) -> clear rows
+        setRowsForHost(input.id, [], fields);
       }
     } else {
       const element = document.getElementById(input.id);
@@ -692,6 +724,25 @@ async function openCalculator(calcKey) {
       );
     }
 
+    if (input.type === 'rows') {
+      return (
+        '<label>' + input.label + '</label>' +
+        '<div id="' + input.id + '-rows" class="rows-host">' +
+          '<div class="row-list"></div>' +
+          '<div style="margin-top:8px;">' +
+            '<button type="button" class="button add-row-btn" data-input-id="' + input.id + '">Add row</button>' +
+          '</div>' +
+        '</div>'
+      );
+    }
+
+    if (input.type === 'textarea') {
+      return (
+        '<label for="' + input.id + '">' + input.label + '</label>' +
+        '<textarea id="' + input.id + '" class="input" rows="4">' + (input.default || '') + '</textarea>'
+      );
+    }
+
     return (
       '<label for="' + input.id + '">' + input.label + '</label>' +
       '<input id="' + input.id + '" type="' + input.type + '" min="' + (input.min || '') + '" value="' + (input.default || '') + '" class="input" />'
@@ -711,6 +762,33 @@ async function openCalculator(calcKey) {
     '</div>' +
     '<div id="calcResult"></div>' +
     '<div id="calcHistoryHost"></div>';
+
+  // Initialize any rows editors created above
+  calc.inputs.forEach(function(input) {
+    if (input.type === 'rows') {
+      const fields = input.rowFields || ['width', 'height', 'qty'];
+      if (Array.isArray(input.default) && input.default.length) {
+        setRowsForHost(input.id, input.default, fields);
+      } else {
+        // Start with one empty row for convenience
+        setRowsForHost(input.id, [], fields);
+        addRowTo(input.id, {}, fields);
+      }
+    }
+  });
+
+  // Bind Add row buttons
+  const addRowButtons = logicContainer.querySelectorAll('.add-row-btn');
+  addRowButtons.forEach(function(btn) {
+    btn.onclick = function() {
+      const inputId = btn.getAttribute('data-input-id');
+      const input = calc.inputs.find(function(i) { return i.id === inputId; });
+      if (input && input.type === 'rows') {
+        const fields = input.rowFields || ['width', 'height', 'qty'];
+        addRowTo(inputId, {}, fields);
+      }
+    };
+  });
 
   await refreshCalculatorHistory(calcKey, calc);
 
@@ -853,5 +931,74 @@ function closeCalculator() {
   window.scrollTo(0, 0); 
 }
 
+// Row editor helpers for inputs of type 'rows'
+// fields can be like ['length', 'qty'] or ['width', 'height', 'qty']
+function createRowElement(rowData, fields) {
+  const item = document.createElement('div');
+  item.className = 'row-item';
+  item.style.display = 'flex';
+  item.style.gap = '8px';
+  item.style.marginBottom = '6px';
 
- 
+  const fieldConfigs = {
+    length: { className: 'row-width', placeholder: 'length', width: '90px' },
+    width: { className: 'row-width', placeholder: 'width', width: '90px' },
+    height: { className: 'row-height', placeholder: 'height', width: '90px' },
+    qty: { className: 'row-qty', placeholder: 'qty', width: '70px' }
+  };
+
+  if (!Array.isArray(fields)) fields = ['width', 'height', 'qty'];
+
+  fields.forEach(function(fieldName) {
+    const config = fieldConfigs[fieldName];
+    if (!config) return;
+
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.className = config.className;
+    input.placeholder = config.placeholder;
+    input.min = '0';
+    input.style.width = config.width;
+
+    const dataKey = fieldName === 'length' ? 'width' : fieldName;
+    input.value = rowData && rowData[dataKey] !== undefined ? rowData[dataKey] : '';
+    if (fieldName === 'qty') input.value = rowData && rowData.qty !== undefined ? rowData.qty : 1;
+
+    item.appendChild(input);
+  });
+
+  const remove = document.createElement('button');
+  remove.type = 'button';
+  remove.className = 'button';
+  remove.style.padding = '4px 8px';
+  remove.textContent = 'Remove';
+  remove.onclick = function() {
+    item.remove();
+  };
+
+  item.appendChild(remove);
+
+  return item;
+}
+
+function addRowTo(inputId, rowData, fields) {
+  const host = document.getElementById(inputId + '-rows');
+  if (!host) return;
+  const list = host.querySelector('.row-list');
+  if (!list) return;
+  const el = createRowElement(rowData || {}, fields);
+  list.appendChild(el);
+}
+
+function setRowsForHost(inputId, rows, fields) {
+  const host = document.getElementById(inputId + '-rows');
+  if (!host) return;
+  const list = host.querySelector('.row-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!Array.isArray(rows)) return;
+  rows.forEach(function(r) {
+    addRowTo(inputId, r, fields);
+  });
+}
+

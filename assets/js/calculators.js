@@ -599,6 +599,233 @@ const calculators = {
             return output;
         }
     },
-  // Add more calculators here
+
+    // Stock Optimiser - cut optimisation for linear stock lengths
+    stockOptimiser: {
+        title: "Stock Optimiser",
+        description: "Optimise how to cut required lengths from a stock length. Enter cuts as lines or comma-separated values like '1000 x 2, 1800 x 2'.",
+        inputs: [
+            { id: "stockLength", label: "Stock Length (mm):", type: "number", min: 1 },
+            { id: "cutsInput", label: "Cuts (rows of length + qty):", type: "rows", rowFields: ["length", "qty"] }
+        ],
+        calculate: function(values) {
+            const stock = Number(values.stockLength);
+            if (!Number.isFinite(stock) || stock <= 0) return 'Enter a valid stock length.';
+
+            // Accept either array of rows [{width, qty}] or a legacy string
+            const pieces = [];
+            if (Array.isArray(values.cutsInput)) {
+                for (let row of values.cutsInput) {
+                    const len = Number(row.width);
+                    const qty = row.qty !== undefined ? Number(row.qty) : 1;
+                    if (!Number.isFinite(len) || !Number.isFinite(qty) || len <= 0 || qty <= 0) return `Invalid row: ${JSON.stringify(row)}`;
+                    if (len > stock) return `Requested piece ${len}mm is longer than stock ${stock}mm.`;
+                    for (let i = 0; i < qty; i++) pieces.push(len);
+                }
+            } else {
+                const raw = (values.cutsInput || '').trim();
+                if (!raw) return 'Enter cuts in the format: 1000 x 2, 1800 x 2';
+                const parts = raw.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+                for (let p of parts) {
+                    const m = p.match(/^(\\d+)\\s*(?:[xX×\\*]?\\s*(\\d+))?$/);
+                    if (!m) return `Invalid cut format: ${p}`;
+                    const len = Number(m[1]);
+                    const qty = m[2] ? Number(m[2]) : 1;
+                    if (len <= 0 || qty <= 0) return `Invalid numbers in: ${p}`;
+                    if (len > stock) return `Requested piece ${len}mm is longer than stock ${stock}mm.`;
+                    for (let i = 0; i < qty; i++) pieces.push(len);
+                }
+            }
+
+            if (pieces.length === 0) return 'No pieces parsed.';
+
+            // Best-Fit Decreasing: sort pieces descending and place each into the bin with smallest remaining space that fits
+            pieces.sort((a, b) => b - a);
+            const bins = []; // each bin: { remaining, items: [lengths] }
+
+            for (let piece of pieces) {
+                let bestIndex = -1;
+                let bestRem = Infinity;
+                for (let i = 0; i < bins.length; i++) {
+                    const rem = bins[i].remaining;
+                    if (rem >= piece && rem - piece < bestRem) {
+                        bestRem = rem - piece;
+                        bestIndex = i;
+                    }
+                }
+                if (bestIndex === -1) {
+                    bins.push({ remaining: stock - piece, items: [piece] });
+                } else {
+                    bins[bestIndex].items.push(piece);
+                    bins[bestIndex].remaining -= piece;
+                }
+            }
+
+            const totalPiecesLength = pieces.reduce((s, v) => s + v, 0);
+            const totalStockUsed = bins.length * stock;
+            const totalWaste = totalStockUsed - totalPiecesLength;
+
+            // Build readable output
+            let out = `Stock Length ${stock}mm, Sheets Used: ${bins.length}\n`;
+            let totalUsedPerAll = 0;
+            for (let i = 0; i < bins.length; i++) {
+                const bin = bins[i];
+                const counts = {};
+                let used = 0;
+                for (let it of bin.items) {
+                    counts[it] = (counts[it] || 0) + 1;
+                    used += it;
+                }
+                totalUsedPerAll += used;
+                const partsList = Object.keys(counts).sort((a,b)=>b-a).map(k => `${k} x ${counts[k]}`);
+                out += `Sheet ${i+1}: ${partsList.join(', ')}, total ${used}mm, waste ${bin.remaining}mm\n`;
+            }
+
+            out += `\nGrand Total Pieces Length: ${totalPiecesLength}mm\n`;
+            out += `Total Used From Stock: ${totalUsedPerAll}mm\n`;
+            out += `Total Waste: ${totalWaste}mm`;
+
+            return out.replace(/\n/g, '<br>');
+        }
+    },
+
+        // Mesh Sheet Optimiser - 2D packing for mesh sheets
+        meshOptimiser: {
+            title: "Mesh Sheet Optimiser",
+            description: "Optimise which stock mesh sheets to use to cut required mesh pieces. Tick available sheet sizes and list required pieces like '700 x 1650' per line or comma-separated.",
+            inputs: [
+                { id: "sheet1200x2000", label: "Use 1200 x 2000", type: "checkbox" },
+                { id: "sheet1200x2400", label: "Use 1200 x 2400", type: "checkbox" },
+                { id: "sheet1500x2000", label: "Use 1500 x 2000", type: "checkbox" },
+                { id: "piecesInput", label: "Pieces (rows of width + height + qty):", type: "rows", rowFields: ["width", "height", "qty"] }
+            ],
+            calculate: function(values) {
+                // Build selected sheet sizes
+                const sheets = [];
+                if (values.sheet1200x2000) sheets.push({ w: 1200, h: 2000 });
+                if (values.sheet1200x2400) sheets.push({ w: 1200, h: 2400 });
+                if (values.sheet1500x2000) sheets.push({ w: 1500, h: 2000 });
+                if (!sheets.length) return 'Select at least one stock sheet size.';
+
+                // Accept rows array [{width, height, qty}] or legacy string
+                const pieces = [];
+                if (Array.isArray(values.piecesInput)) {
+                    for (let row of values.piecesInput) {
+                        const w = Number(row.width);
+                        const h = Number(row.height);
+                        const qty = row.qty !== undefined ? Number(row.qty) : 1;
+                        if (!Number.isFinite(w) || !Number.isFinite(h) || !Number.isFinite(qty) || w <= 0 || h <= 0 || qty <= 0) return `Invalid row: ${JSON.stringify(row)}`;
+                        for (let i = 0; i < qty; i++) pieces.push({ w: w, h: h, area: w*h, label: `${w} x ${h}` });
+                    }
+                } else {
+                    const raw = (values.piecesInput || '').trim();
+                    if (!raw) return 'Enter pieces in the format: 700 x 1650, 800 x 1750';
+                    const parts = raw.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+                    for (let p of parts) {
+                        const m = p.match(/^(\d+)\s*[xX×\*\s]+\s*(\d+)$/);
+                        if (!m) return `Invalid piece format: ${p}`;
+                        const w = Number(m[1]);
+                        const h = Number(m[2]);
+                        if (!w || !h) return `Invalid numbers in: ${p}`;
+                        pieces.push({ w: w, h: h, area: w * h, label: `${w} x ${h}` });
+                    }
+                }
+
+                // Check any piece fits at least one selected sheet (allow rotation)
+                const unfit = pieces.filter(p => !sheets.some(s => (p.w <= s.w && p.h <= s.h) || (p.h <= s.w && p.w <= s.h)));
+                if (unfit.length) return 'Pieces too large for selected sheets: ' + unfit.map(u => u.label).join(', ');
+
+                // Sort pieces by area descending
+                pieces.sort((a,b) => b.area - a.area);
+
+                // Helper: create a new sheet object
+                function createSheet(size) {
+                    return { w: size.w, h: size.h, freeRects: [{ x:0,y:0,w:size.w,h:size.h }], items: [] };
+                }
+
+                // Choose sheet size for new sheet: smallest area that can fit the piece
+                function chooseSheetSizeForPiece(piece) {
+                    const candidates = sheets.filter(s => (piece.w <= s.w && piece.h <= s.h) || (piece.h <= s.w && piece.w <= s.h));
+                    if (!candidates.length) return null;
+                    candidates.sort((a,b) => (a.w*a.h) - (b.w*b.h));
+                    return candidates[0];
+                }
+
+                // Place piece into a sheet using simple guillotine split
+                function placeInSheet(sheet, piece) {
+                    for (let i = 0; i < sheet.freeRects.length; i++) {
+                        const r = sheet.freeRects[i];
+                        // try both orientations
+                        const orientations = [ [piece.w, piece.h], [piece.h, piece.w] ];
+                        for (let ori of orientations) {
+                            const pw = ori[0], ph = ori[1];
+                            if (pw <= r.w && ph <= r.h) {
+                                // place at r.x, r.y
+                                sheet.items.push({ x: r.x, y: r.y, w: pw, h: ph, label: piece.label });
+                                // generate new free rects
+                                const rightW = r.w - pw;
+                                const bottomH = r.h - ph;
+                                const newRects = [];
+                                if (rightW > 0) newRects.push({ x: r.x + pw, y: r.y, w: rightW, h: ph });
+                                if (bottomH > 0) newRects.push({ x: r.x, y: r.y + ph, w: r.w, h: bottomH });
+                                // replace the used rect with the new ones (remove r)
+                                sheet.freeRects.splice(i,1);
+                                sheet.freeRects.push(...newRects);
+                                // prune contained rects
+                                sheet.freeRects = sheet.freeRects.filter(fr => fr.w > 0 && fr.h > 0);
+                                // remove rects fully contained in another
+                                sheet.freeRects = sheet.freeRects.filter(function(a){
+                                    return !sheet.freeRects.some(function(b){
+                                        if (a === b) return false;
+                                        return a.x >= b.x && a.y >= b.y && a.x + a.w <= b.x + b.w && a.y + a.h <= b.y + b.h;
+                                    });
+                                });
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+
+                // Packing: try to place each piece into existing sheets; else open new sheet of chosen size
+                const usedSheets = [];
+                for (let piece of pieces) {
+                    let placed = false;
+                    // try existing sheets
+                    for (let s of usedSheets) {
+                        if (placeInSheet(s, piece)) { placed = true; break; }
+                    }
+                    if (!placed) {
+                        const size = chooseSheetSizeForPiece(piece);
+                        if (!size) return `No sheet size can fit piece ${piece.label}`;
+                        const s = createSheet(size);
+                        if (!placeInSheet(s, piece)) {
+                            // should not happen
+                            return `Failed to place piece ${piece.label}`;
+                        }
+                        usedSheets.push(s);
+                    }
+                }
+
+                // Build output
+                let out = `Sheets used: ${usedSheets.length}\n`;
+                let totalPieceArea = 0;
+                let totalSheetArea = 0;
+                for (let i = 0; i < usedSheets.length; i++) {
+                    const s = usedSheets[i];
+                    const sheetArea = s.w * s.h;
+                    totalSheetArea += sheetArea;
+                    let usedArea = 0;
+                    const counts = {};
+                    s.items.forEach(it => { usedArea += it.w * it.h; counts[it.label] = (counts[it.label]||0)+1; });
+                    totalPieceArea += usedArea;
+                    const partsList = Object.keys(counts).map(k => `${k} x ${counts[k]}`);
+                    const waste = sheetArea - usedArea;
+                    out += `Sheet ${i+1}: ${s.w} x ${s.h} — ${partsList.join(', ')}\n`;
+                }
+
+                return out.replace(/\n/g, '<br>');
+            }
+        },
 
 };

@@ -47,6 +47,16 @@ const textContent = {
             name: "Main Slider Cutting/Making Calculator",
             synopsis: "Calculate cutting and making sizes for Lifestyle or Crim slider doors."
         },
+        {
+          key: "stockOptimiser",
+          name: "Stock Optimiser",
+          synopsis: "Optimise cutting lists to minimise waste from linear stock lengths."
+        },
+        {
+          key: "meshOptimiser",
+          name: "Mesh Sheet Optimiser",
+          synopsis: "Optimise which stock mesh sheets to use to cut required mesh pieces."
+        },
         // ...add more calculators for Manufacturer here
       ]
     },
