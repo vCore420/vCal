@@ -1,5 +1,5 @@
 :root {
-  --font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-family: 'fira code', monospace;
 
   /* Brand greens */
   --brand-green: #3eae58;
@@ -34,7 +34,7 @@
   --field-text: #283136;
   --field-border: #bcc6c1;
 
-  --glass-shadow-dark: 0 18px 38px rgba(14, 18, 20, 0.18);
+  --glass-shadow-dark: 0 18px 38px rgba(14, 18, 20, 0.015);
   --glass-shadow-light: 0 1px 10px 1px rgba(255, 255, 255, 0.08);
   --glass-inset: 0 0 10px 2px rgba(255, 255, 255, 0.12);
 
@@ -46,7 +46,7 @@
   --dark-border: #8c97a3;
   --dark-text: #f3f5f4;
   --dark-line: rgba(217, 223, 220, 0.16);
-  --dark-shadow: 0 16px 30px rgba(12, 16, 18, 0.18);
+  --dark-shadow: 0 16px 30px rgba(12, 16, 18, 0.034);
 
   /* Light theme */
   --light-bg: #f6f4f5;
@@ -56,7 +56,7 @@
   --light-border: #bbc5c0;
   --light-text: #283136;
   --light-line: rgba(40, 49, 54, 0.14);
-  --light-shadow: 0 12px 24px rgba(20, 26, 29, 0.08);
+  --light-shadow: 0 6px 12px rgba(20, 26, 29, 0.08);
 }
 
 body.theme-light {
@@ -74,6 +74,8 @@ body.theme-light {
   --field-bg: #ffffff;
   --field-text: #283136;
   --field-border: #bcc6c1;
+
+  --rose-tint: rgba(40, 49, 54, 0.14);
 
   --glass-shadow-light: 0 1px 8px 1px rgba(40, 49, 54, 0.05);
   --glass-inset: 0 0 8px 1px rgba(255, 255, 255, 0.45);

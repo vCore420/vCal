@@ -11,6 +11,8 @@ body {
     radial-gradient(circle at top right, rgba(144, 159, 189, 0.14), transparent 24%),
     radial-gradient(circle at bottom center, rgba(173, 132, 147, 0.08), transparent 28%),
     var(--dark-bg);
+  background-image: radial-gradient(circle, var(--rose-tint) 1px, transparent 1.5px);
+  background-size: 24px 24px;
   color: var(--dark-text);
   display: flex;
   flex-direction: column;
@@ -31,55 +33,12 @@ body {
   align-items: center;
 }
 
-/* Page Banner */
-#banner {
-  text-align: center;
-  width: 100%;
-  padding: 1.1rem 5.5rem 1rem;
-  box-sizing: border-box;
-}
-
-/* Headings and paragraphs */
-h1 {
-  font-size: clamp(1.9rem, 3vw, 2.45rem);
-  color: var(--dark-text);
-  overflow-wrap: break-word;
-  margin: 0;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-}
-
-p {
-  font-size: 1.05rem;
-  color: var(--dark-text);
-  overflow-wrap: break-word;
-  line-height: 1.55;
-}
-
-#main-synopsis {
-  max-width: 680px;
-  margin: 0.55rem auto 0;
-  color: color-mix(in srgb, var(--dark-text) 88%, var(--rose-mist) 12%);
-}
-
-.top-back-btn {
-  position: absolute;
-  top: 1.2rem;
-  left: 4rem;
-  z-index: 11;
-  border: 1px solid var(--dark-border);
-  background: var(--dark-button);
-  color: var(--dark-text);
-  border-radius: 14px;
-  padding: 0.55em 0.9em;
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: var(--dark-shadow);
-}
-
-.top-back-btn:hover {
-  background: var(--dark-button-hover);
+/* Hide inactive sections */
+.hidden {
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
 }
 
 /* Main content containers */
@@ -94,24 +53,6 @@ p {
 #modal-title {
   font-size: 1.8em;
   color: var(--dark-text);
-}
-
-/* Liquid glass effect */
-.liquid-glass {
-  min-width: 280px;
-}
-
-.button {
-  width: 100%;
-  margin-top: auto;
-}
-
-/* Hide inactive sections */
-.hidden {
-  display: none;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
 }
 
 .calc-close-btn {
@@ -145,8 +86,8 @@ p {
     ),
     var(--card-bg);
   box-shadow: var(--glass-shadow-dark);
-  border: 1px solid rgba(231, 221, 226, 0.14);
-  border-radius: 22px;
+  border: 1px solid var(--brand-green);
+  border-radius: 12px;
   max-width: 50%;
   width: 100%;
   display: flex;
@@ -201,8 +142,9 @@ p {
 #calculator-logic-container input[type="text"] {
   width: 100%;
   padding: 0.78em 0.95em;
+  font-family: var(--font-family);
   font-size: 1rem;
-  border-radius: 14px;
+  border-radius: 8px;
   border: 1px solid var(--field-border);
   background: var(--field-bg);
   color: var(--field-text);
@@ -244,8 +186,8 @@ p {
   gap: 2rem;
   flex-direction: row;
   padding: 0.65em 0.9em;
-  border: 1px solid rgba(231, 221, 226, 0.16);
-  border-radius: 14px;
+  border: 1px solid var(--brand-green);
+  border-radius: 8px;
   background:
     linear-gradient(
       180deg,
@@ -272,7 +214,7 @@ p {
   font-size: 1rem;
   color: var(--dark-text);
   padding: 0;
-  border-radius: 0.7em;
+  border-radius: 8px;
   min-height: 2em;
   width: 100%;
   box-sizing: border-box;
@@ -286,7 +228,7 @@ p {
   font-size: 1rem;
   font-weight: 700;
   padding: 0.85em 0;
-  border-radius: 14px;
+  border-radius: 8px;
 }
 
 #calcRunBtn,
@@ -322,8 +264,8 @@ p {
 .calc-result-block {
   margin-top: 0.5em;
   padding: 1rem 1.05rem;
-  border: 1px solid var(--dark-border);
-  border-radius: 18px;
+  border: 1px solid var(--brand-green);
+  border-radius: 8px;
   background:
     linear-gradient(
       180deg,
@@ -390,8 +332,8 @@ body.theme-light .calc-result-block {
   gap: 0.35em;
   padding: 0.95em 1em;
   margin-top: 2px;
-  border: 1px solid var(--field-border);
-  border-radius: 16px;
+  border: 1px solid var(--brand-green);
+  border-radius: 8px;
   background:
     linear-gradient(
       180deg,
@@ -421,7 +363,7 @@ body.theme-light .calc-result-block {
 }
 
 .calc-history-title {
-  font-size: 0.98rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--dark-text);
   line-height: 1.3;
@@ -534,12 +476,12 @@ body.theme-light .result-number {
 
 .product-info {
   background: var(--card-bg);
-  border-radius: 18px;
+  border-radius: 8px;
   padding: 1em 1.2em;
   margin: 1em 0;
   color: var(--dark-text);
   font-size: 1.1em;
-  border: 1px solid var(--field-border);
+  border: 1px solid var(--brand-green);
   background:
     linear-gradient(
       180deg,
@@ -593,14 +535,15 @@ body.theme-light .result-number {
 }
 
 .quick-calc-bubble {
+  font-family: var(--font-family);
   position: fixed;
   right: 2rem;
   top: 10rem;
   z-index: 11;
   width: 56px;
   height: 56px;
-  border: 1.5px solid var(--dark-border);
-  border-radius: 26px;
+  border: 1.5px solid var(--brand-green-soft);
+  border-radius: 6px;
   background:
     linear-gradient(
       180deg,
@@ -609,7 +552,7 @@ body.theme-light .result-number {
     ),
     var(--dark-banner);
   color: var(--dark-text);
-  box-shadow: 0 10px 22px rgba(12, 16, 18, 0.18);
+  box-shadow: var(--glass-shadow-dark);
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
@@ -622,8 +565,8 @@ body.theme-light .result-number {
   z-index: 12;
   width: min(92vw, 360px);
   padding: 0.95rem;
-  border: 1px solid var(--dark-border);
-  border-radius: 20px;
+  border: 1px solid var(--brand-green);
+  border-radius: 12px;
   background:
     linear-gradient(
       180deg,
@@ -652,13 +595,14 @@ body.theme-light .result-number {
   width: auto;
   min-width: 36px;
   margin: 0;
-  padding: 0.35rem 0.55rem;
-  border: 1px solid rgba(231, 221, 226, 0.16);
-  border-radius: 12px;
+  padding: 0.35rem 0.35rem;
+  border: 1px solid var(--brand-green);
+  border-radius: 8px;
   background: var(--dark-button);
   color: var(--dark-text);
   cursor: pointer;
   font-weight: 700;
+  font-size: 0.85rem;
 }
 
 .quick-calc-display {
@@ -666,10 +610,11 @@ body.theme-light .result-number {
   box-sizing: border-box;
   margin-bottom: 0.75rem;
   padding: 0.8rem 0.9rem;
-  border: 1px solid var(--field-border);
-  border-radius: 14px;
+  border: 1px solid var(--brand-green);
+  border-radius: 8px;
   background: var(--field-bg);
   color: var(--field-text);
+  font-family: var(--font-family);
   font-size: 1.15rem;
   font-weight: 700;
   text-align: right;
@@ -683,11 +628,12 @@ body.theme-light .result-number {
 
 .quick-calc-key {
   padding: 0.78rem 0;
-  border: 1px solid var(--dark-border);
-  border-radius: 14px;
+  border: 1px solid var(--brand-green);
+  border-radius: 8px;
   background: var(--dark-button);
   color: var(--dark-text);
   cursor: pointer;
+  font-family: var(--font-family);
   font-size: 1.05rem;
   font-weight: 700;
 }
@@ -695,7 +641,7 @@ body.theme-light .result-number {
 .quick-calc-key:hover,
 .quick-calc-close:hover,
 .quick-calc-bubble:hover {
-  background: var(--dark-button-hover);
+  background: var(--brand-green-soft);
 }
 
 .quick-calc-op {
