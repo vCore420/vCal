@@ -756,152 +756,85 @@ const calculators = {
         }
     },
 
-        // Mesh Sheet Optimiser - 2D packing for mesh sheets
-        meshOptimiser: {
-            title: "Mesh Sheet Optimiser",
-            description: "Optimise which stock mesh sheets to use to cut required mesh pieces. Tick available sheet sizes and list required pieces like '700 x 1650' per line or comma-separated.",
-            inputs: [
-                { id: "sheet1200x2000", label: "Use 1200 x 2000", type: "checkbox" },
-                { id: "sheet1200x2400", label: "Use 1200 x 2400", type: "checkbox" },
-                { id: "sheet1500x2000", label: "Use 1500 x 2000", type: "checkbox" },
-                { id: "piecesInput", label: "Pieces (rows of width + height + qty):", type: "rows", rowFields: ["width", "height", "qty"] }
-            ],
-            calculate: function(values) {
-                // Build selected sheet sizes
-                const sheets = [];
-                if (values.sheet1200x2000) sheets.push({ w: 1200, h: 2000 });
-                if (values.sheet1200x2400) sheets.push({ w: 1200, h: 2400 });
-                if (values.sheet1500x2000) sheets.push({ w: 1500, h: 2000 });
-                if (!sheets.length) return 'Select at least one stock sheet size.';
+    // Mesh Sheet Optimiser - 2D packing for mesh sheets
+    meshOptimiser: {
+        title: "Mesh Sheet Optimiser",
+        description: "Optimise which stock mesh sheets to use to cut required mesh pieces. Tick available sheet sizes and list required pieces like '700 x 1650' per line or comma-separated.",
+        inputs: [
+            { id: "sheet1200x2000", label: "Use 1200 x 2000", type: "checkbox" },
+            { id: "sheet1200x2400", label: "Use 1200 x 2400", type: "checkbox" },
+            { id: "sheet1500x2000", label: "Use 1500 x 2000", type: "checkbox" },
+            { id: "piecesInput", label: "Pieces (rows of width + height + qty):", type: "rows", rowFields: ["width", "height", "qty"] }
+        ],
+        calculate: function(values) {
+            // Build selected sheet sizes
+            const sheets = [];
+            if (values.sheet1200x2000) sheets.push({ w: 1200, h: 2000 });
+            if (values.sheet1200x2400) sheets.push({ w: 1200, h: 2400 });
+            if (values.sheet1500x2000) sheets.push({ w: 1500, h: 2000 });
+            if (!sheets.length) return 'Select at least one stock sheet size.';
 
-                // Accept rows array [{width, height, qty}] or legacy string
-                const pieces = [];
-                if (Array.isArray(values.piecesInput)) {
-                    for (let row of values.piecesInput) {
-                        const w = Number(row.width);
-                        const h = Number(row.height);
-                        const qty = row.qty !== undefined ? Number(row.qty) : 1;
-                        if (!Number.isFinite(w) || !Number.isFinite(h) || !Number.isFinite(qty) || w <= 0 || h <= 0 || qty <= 0) return `Invalid row: ${JSON.stringify(row)}`;
-                        for (let i = 0; i < qty; i++) pieces.push({ w: w, h: h, area: w*h, label: `${w} x ${h}` });
-                    }
-                } else {
-                    const raw = (values.piecesInput || '').trim();
-                    if (!raw) return 'Enter pieces in the format: 700 x 1650, 800 x 1750';
-                    const parts = raw.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
-                    for (let p of parts) {
-                        const m = p.match(/^(\d+)\s*[xX×\*\s]+\s*(\d+)$/);
-                        if (!m) return `Invalid piece format: ${p}`;
-                        const w = Number(m[1]);
-                        const h = Number(m[2]);
-                        if (!w || !h) return `Invalid numbers in: ${p}`;
-                        pieces.push({ w: w, h: h, area: w * h, label: `${w} x ${h}` });
-                    }
+            // Accept rows array [{width, height, qty}] or legacy string
+            const pieces = [];
+            if (Array.isArray(values.piecesInput)) {
+                for (let row of values.piecesInput) {
+                    const w = Number(row.width);
+                    const h = Number(row.height);
+                    const qty = row.qty !== undefined ? Number(row.qty) : 1;
+                    if (!Number.isFinite(w) || !Number.isFinite(h) || !Number.isFinite(qty) || w <= 0 || h <= 0 || qty <= 0) return `Invalid row: ${JSON.stringify(row)}`;
+                    for (let i = 0; i < qty; i++) pieces.push({ w: w, h: h, area: w*h, label: `${w} x ${h}` });
+                }
+            } else {
+                const raw = (values.piecesInput || '').trim();
+                if (!raw) return 'Enter pieces in the format: 700 x 1650, 800 x 1750';
+                const parts = raw.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+                for (let p of parts) {
+                    const m = p.match(/^(\d+)\s*[xX×\*\s]+\s*(\d+)$/);
+                    if (!m) return `Invalid piece format: ${p}`;
+                    const w = Number(m[1]);
+                    const h = Number(m[2]);
+                    if (!w || !h) return `Invalid numbers in: ${p}`;
+                    pieces.push({ w: w, h: h, area: w * h, label: `${w} x ${h}` });
+                }
+            }
+
+            // Check any piece fits at least one selected sheet (allow rotation)
+            const unfit = pieces.filter(p => !sheets.some(s => (p.w <= s.w && p.h <= s.h) || (p.h <= s.w && p.w <= s.h)));
+            if (unfit.length) return 'Pieces too large for selected sheets: ' + unfit.map(u => u.label).join(', ');
+
+            // Sort pieces by area descending
+            pieces.sort((a,b) => b.area - a.area);
+
+            // Helper: create a new sheet object
+            function createSheet(size) {
+                return { w: size.w, h: size.h, freeRects: [{ x:0,y:0,w:size.w,h:size.h }], items: [] };
+            }
+
+            // Choose sheet size for new sheet based on how well it can fit the current piece and remaining pieces
+            function chooseSheetSizeForPiece(piece, remainingPieces) {
+                function canFit(p, size) {
+                    return (p.w <= size.w && p.h <= size.h) || (p.h <= size.w && p.w <= size.h);
                 }
 
-                // Check any piece fits at least one selected sheet (allow rotation)
-                const unfit = pieces.filter(p => !sheets.some(s => (p.w <= s.w && p.h <= s.h) || (p.h <= s.w && p.w <= s.h)));
-                if (unfit.length) return 'Pieces too large for selected sheets: ' + unfit.map(u => u.label).join(', ');
-
-                // Sort pieces by area descending
-                pieces.sort((a,b) => b.area - a.area);
-
-                // Helper: create a new sheet object
-                function createSheet(size) {
-                    return { w: size.w, h: size.h, freeRects: [{ x:0,y:0,w:size.w,h:size.h }], items: [] };
-                }
-
-                // Choose sheet size for new sheet based on how well it can fit the current piece and remaining pieces
-                function chooseSheetSizeForPiece(piece, remainingPieces) {
-                    function canFit(p, size) {
-                        return (p.w <= size.w && p.h <= size.h) || (p.h <= size.w && p.w <= size.h);
-                    }
-
-                    function placePieceInSheet(sheet, p) {
-                        for (let i = 0; i < sheet.freeRects.length; i++) {
-                            const r = sheet.freeRects[i];
-                            const orientations = [[p.w, p.h], [p.h, p.w]];
-                            for (let ori of orientations) {
-                                const pw = ori[0];
-                                const ph = ori[1];
-                                if (pw <= r.w && ph <= r.h) {
-                                    sheet.items.push({ x: r.x, y: r.y, w: pw, h: ph, label: p.label });
-                                    const rightW = r.w - pw;
-                                    const bottomH = r.h - ph;
-                                    const newRects = [];
-                                    if (rightW > 0) newRects.push({ x: r.x + pw, y: r.y, w: rightW, h: ph });
-                                    if (bottomH > 0) newRects.push({ x: r.x, y: r.y + ph, w: r.w, h: bottomH });
-                                    sheet.freeRects.splice(i, 1);
-                                    sheet.freeRects.push(...newRects);
-                                    sheet.freeRects = sheet.freeRects.filter(fr => fr.w > 0 && fr.h > 0);
-                                    sheet.freeRects = sheet.freeRects.filter(function(a) {
-                                        return !sheet.freeRects.some(function(b) {
-                                            if (a === b) return false;
-                                            return a.x >= b.x && a.y >= b.y && a.x + a.w <= b.x + b.w && a.y + a.h <= b.y + b.h;
-                                        });
-                                    });
-                                    return true;
-                                }
-                            }
-                        }
-                        return false;
-                    }
-
-                    function simulateSheetSize(size) {
-                        const sheet = { w: size.w, h: size.h, freeRects: [{ x: 0, y: 0, w: size.w, h: size.h }], items: [] };
-                        if (!placePieceInSheet(sheet, piece)) return -1;
-
-                        const remaining = remainingPieces.slice().sort((a, b) => b.area - a.area);
-                        let placedCount = 1;
-                        for (let other of remaining) {
-                            if (placePieceInSheet(sheet, other)) {
-                                placedCount++;
-                            }
-                        }
-                        return placedCount;
-                    }
-
-                    let bestSheet = null;
-                    let bestScore = -1;
-                    let bestArea = Infinity;
-
-                    for (let sheet of sheets) {
-                        if (!canFit(piece, sheet)) continue;
-                        const score = simulateSheetSize(sheet);
-                        if (score > bestScore || (score === bestScore && sheet.w * sheet.h < bestArea)) {
-                            bestScore = score;
-                            bestArea = sheet.w * sheet.h;
-                            bestSheet = sheet;
-                        }
-                    }
-
-                    return bestSheet;
-                }
-
-                // Place piece into a sheet using simple guillotine split
-                function placeInSheet(sheet, piece) {
+                function placePieceInSheet(sheet, p) {
                     for (let i = 0; i < sheet.freeRects.length; i++) {
                         const r = sheet.freeRects[i];
-                        // try both orientations
-                        const orientations = [ [piece.w, piece.h], [piece.h, piece.w] ];
+                        const orientations = [[p.w, p.h], [p.h, p.w]];
                         for (let ori of orientations) {
-                            const pw = ori[0], ph = ori[1];
+                            const pw = ori[0];
+                            const ph = ori[1];
                             if (pw <= r.w && ph <= r.h) {
-                                // place at r.x, r.y
-                                sheet.items.push({ x: r.x, y: r.y, w: pw, h: ph, label: piece.label });
-                                // generate new free rects
+                                sheet.items.push({ x: r.x, y: r.y, w: pw, h: ph, label: p.label });
                                 const rightW = r.w - pw;
                                 const bottomH = r.h - ph;
                                 const newRects = [];
                                 if (rightW > 0) newRects.push({ x: r.x + pw, y: r.y, w: rightW, h: ph });
                                 if (bottomH > 0) newRects.push({ x: r.x, y: r.y + ph, w: r.w, h: bottomH });
-                                // replace the used rect with the new ones (remove r)
-                                sheet.freeRects.splice(i,1);
+                                sheet.freeRects.splice(i, 1);
                                 sheet.freeRects.push(...newRects);
-                                // prune contained rects
                                 sheet.freeRects = sheet.freeRects.filter(fr => fr.w > 0 && fr.h > 0);
-                                // remove rects fully contained in another
-                                sheet.freeRects = sheet.freeRects.filter(function(a){
-                                    return !sheet.freeRects.some(function(b){
+                                sheet.freeRects = sheet.freeRects.filter(function(a) {
+                                    return !sheet.freeRects.some(function(b) {
                                         if (a === b) return false;
                                         return a.x >= b.x && a.y >= b.y && a.x + a.w <= b.x + b.w && a.y + a.h <= b.y + b.h;
                                     });
@@ -913,25 +846,92 @@ const calculators = {
                     return false;
                 }
 
-                // Packing: try to place each piece into existing sheets; else open new sheet of chosen size
-                const usedSheets = [];
-                for (let piece of pieces) {
-                    let placed = false;
-                    // try existing sheets
-                    for (let s of usedSheets) {
-                        if (placeInSheet(s, piece)) { placed = true; break; }
-                    }
-                    if (!placed) {
-                        const remainingPieces = pieces.slice(
-    pieces.indexOf(piece) + 1
-);
+                function simulateSheetSize(size) {
+                    const sheet = { w: size.w, h: size.h, freeRects: [{ x: 0, y: 0, w: size.w, h: size.h }], items: [] };
+                    if (!placePieceInSheet(sheet, piece)) return -1;
 
-const size = chooseSheetSizeForPiece(
-    piece,
-    remainingPieces
-);
-                        if (!size) return `No sheet size can fit piece ${piece.label}`;
-                        const s = createSheet(size);
+                    const remaining = remainingPieces.slice().sort((a, b) => b.area - a.area);
+                    let placedCount = 1;
+                    for (let other of remaining) {
+                        if (placePieceInSheet(sheet, other)) {
+                            placedCount++;
+                        }
+                    }
+                    return placedCount;
+                }
+
+                let bestSheet = null;
+                let bestScore = -1;
+                let bestArea = Infinity;
+
+                for (let sheet of sheets) {
+                    if (!canFit(piece, sheet)) continue;
+                    const score = simulateSheetSize(sheet);
+                    if (score > bestScore || (score === bestScore && sheet.w * sheet.h < bestArea)) {
+                        bestScore = score;
+                        bestArea = sheet.w * sheet.h;
+                        bestSheet = sheet;
+                    }
+                }
+
+                return bestSheet;
+            }
+
+            // Place piece into a sheet using simple guillotine split
+            function placeInSheet(sheet, piece) {
+                for (let i = 0; i < sheet.freeRects.length; i++) {
+                    const r = sheet.freeRects[i];
+                    // try both orientations
+                    const orientations = [ [piece.w, piece.h], [piece.h, piece.w] ];
+                    for (let ori of orientations) {
+                        const pw = ori[0], ph = ori[1];
+                        if (pw <= r.w && ph <= r.h) {
+                            // place at r.x, r.y
+                            sheet.items.push({ x: r.x, y: r.y, w: pw, h: ph, label: piece.label });
+                            // generate new free rects
+                            const rightW = r.w - pw;
+                            const bottomH = r.h - ph;
+                            const newRects = [];
+                            if (rightW > 0) newRects.push({ x: r.x + pw, y: r.y, w: rightW, h: ph });
+                            if (bottomH > 0) newRects.push({ x: r.x, y: r.y + ph, w: r.w, h: bottomH });
+                            // replace the used rect with the new ones (remove r)
+                            sheet.freeRects.splice(i,1);
+                            sheet.freeRects.push(...newRects);
+                            // prune contained rects
+                            sheet.freeRects = sheet.freeRects.filter(fr => fr.w > 0 && fr.h > 0);
+                            // remove rects fully contained in another
+                            sheet.freeRects = sheet.freeRects.filter(function(a){
+                                return !sheet.freeRects.some(function(b){
+                                    if (a === b) return false;
+                                    return a.x >= b.x && a.y >= b.y && a.x + a.w <= b.x + b.w && a.y + a.h <= b.y + b.h;
+                                });
+                            });
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            // Packing: try to place each piece into existing sheets; else open new sheet of chosen size
+            const usedSheets = [];
+            for (let piece of pieces) {
+                let placed = false;
+                // try existing sheets
+                for (let s of usedSheets) {
+                    if (placeInSheet(s, piece)) { placed = true; break; }
+                }
+                if (!placed) {
+                    const remainingPieces = pieces.slice(
+                    pieces.indexOf(piece) + 1
+                );
+
+                const size = chooseSheetSizeForPiece(
+                    piece,
+                    remainingPieces
+                );
+                    if (!size) return `No sheet size can fit piece ${piece.label}`;
+                    const s = createSheet(size);
                         if (!placeInSheet(s, piece)) {
                             // should not happen
                             return `Failed to place piece ${piece.label}`;
