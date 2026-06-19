@@ -645,6 +645,58 @@ function enterDepartment(deptKey) {
   }
 }
 
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function buildProductSectionContent(content) {
+  if (Array.isArray(content)) {
+    const items = [];
+    for (let i = 0; i < content.length; i++) {
+      const item = content[i];
+      if (item && typeof item === 'object' && item.url) {
+        const label = item.label ? escapeHtml(item.label) : escapeHtml(item.url);
+        const url = escapeHtml(item.url);
+        items.push(`<li><a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a></li>`);
+        continue;
+      }
+
+      if (typeof item === 'string') {
+        const trimmed = item.trim();
+        const next = content[i + 1] && typeof content[i + 1] === 'string' ? content[i + 1].trim() : null;
+        const linkLabelMatch = trimmed.match(/^(.*?)\s*:\s*$/);
+        const urlMatch = next && next.match(/^https?:\/\//i);
+
+        if (linkLabelMatch && urlMatch) {
+          const label = escapeHtml(linkLabelMatch[1]);
+          const url = escapeHtml(next);
+          items.push(`<li>${label}: <a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a></li>`);
+          i += 1;
+          continue;
+        }
+
+        if (trimmed.match(/^https?:\/\//i)) {
+          const url = escapeHtml(trimmed);
+          items.push(`<li><a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a></li>`);
+          continue;
+        }
+
+        items.push(`<li>${escapeHtml(trimmed)}</li>`);
+        continue;
+      }
+
+      items.push(`<li>${escapeHtml(String(item))}</li>`);
+    }
+    return `<ul>${items.join('')}</ul>`;
+  }
+  return `<p>${escapeHtml(content)}</p>`;
+}
+
 // Show product info
 function openProductInfo(productKey) {
   showSection('calculator-logic-container');
@@ -661,20 +713,17 @@ function openProductInfo(productKey) {
   if (product.details && product.details.length) {
     detailsHtml = product.details.map(section => `
       <section class="product-section">
-        <h3>${section.heading}</h3>
-        ${Array.isArray(section.content)
-          ? `<ul>${section.content.map(item => `<li>${item}</li>`).join('')}</ul>`
-          : `<p>${section.content}</p>`
-        }
+        <h3>${escapeHtml(section.heading)}</h3>
+        ${buildProductSectionContent(section.content)}
       </section>
     `).join('');
   }
 
   logicContainer.innerHTML = `
     <button class="calc-close-btn" onclick="closeCalculator()">X</button>
-    <h2>${product.name}</h2>
+    <h2>${escapeHtml(product.name)}</h2>
     <div class="product-info">
-      <p>${product.synopsis}</p>
+      <p>${escapeHtml(product.synopsis)}</p>
       ${detailsHtml}
     </div>
     <button class="button" onclick="closeCalculator()">Back</button>
