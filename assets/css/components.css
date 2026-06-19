@@ -423,7 +423,7 @@ p {
 }
 
 .card-thumb {
-  max-width: 128px;
+  max-width: 256px;
 }
 
 .card-modal {
@@ -468,8 +468,8 @@ p {
 }
 
 .card-modal-img {
-  max-width: 60vw;
-  max-height: 50vh;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 12px;
 }
 
