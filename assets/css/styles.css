@@ -86,7 +86,7 @@ body {
     ),
     var(--card-bg);
   box-shadow: var(--glass-shadow-dark);
-  border: 1px solid var(--brand-green);
+  border: 1px solid var(--brand-green-deep);
   border-radius: 12px;
   max-width: 50%;
   width: 100%;
@@ -186,7 +186,7 @@ body {
   gap: 2rem;
   flex-direction: row;
   padding: 0.65em 0.9em;
-  border: 1px solid var(--brand-green);
+  border: 1px solid var(--brand-green-deep);
   border-radius: 8px;
   background:
     linear-gradient(
@@ -237,7 +237,7 @@ body {
     linear-gradient(
       135deg,
       var(--brand-green-deep) 0%,
-      var(--brand-green) 100%
+      var(--brand-green-deep) 100%
     );
   border-color: rgba(87, 201, 111, 0.2);
   color: #f7faf8;
@@ -249,7 +249,7 @@ body {
   background:
     linear-gradient(
       135deg,
-      var(--brand-green) 0%,
+      var(--brand-green-deep) 0%,
       var(--brand-green-bright) 100%
     );
   border-color: rgba(87, 201, 111, 0.3);
@@ -264,7 +264,7 @@ body {
 .calc-result-block {
   margin-top: 0.5em;
   padding: 1rem 1.05rem;
-  border: 1px solid var(--brand-green);
+  border: 1px solid var(--brand-green-deep);
   border-radius: 8px;
   background:
     linear-gradient(
@@ -332,7 +332,7 @@ body.theme-light .calc-result-block {
   gap: 0.35em;
   padding: 0.95em 1em;
   margin-top: 2px;
-  border: 1px solid var(--brand-green);
+  border: 1px solid var(--brand-green-deep);
   border-radius: 8px;
   background:
     linear-gradient(
@@ -481,7 +481,7 @@ body.theme-light .result-number {
   margin: 1em 0;
   color: var(--dark-text);
   font-size: 1.1em;
-  border: 1px solid var(--brand-green);
+  border: 1px solid var(--brand-green-deep);
   background:
     linear-gradient(
       180deg,
@@ -565,7 +565,7 @@ body.theme-light .result-number {
   z-index: 12;
   width: min(92vw, 360px);
   padding: 0.95rem;
-  border: 1px solid var(--brand-green);
+  border: 1px solid var(--brand-green-deep);
   border-radius: 12px;
   background:
     linear-gradient(
@@ -596,7 +596,7 @@ body.theme-light .result-number {
   min-width: 36px;
   margin: 0;
   padding: 0.35rem 0.35rem;
-  border: 1px solid var(--brand-green);
+  border: 1px solid var(--brand-green-deep);
   border-radius: 8px;
   background: var(--dark-button);
   color: var(--dark-text);
@@ -610,7 +610,7 @@ body.theme-light .result-number {
   box-sizing: border-box;
   margin-bottom: 0.75rem;
   padding: 0.8rem 0.9rem;
-  border: 1px solid var(--brand-green);
+  border: 1px solid var(--brand-green-deep);
   border-radius: 8px;
   background: var(--field-bg);
   color: var(--field-text);
@@ -628,7 +628,7 @@ body.theme-light .result-number {
 
 .quick-calc-key {
   padding: 0.78rem 0;
-  border: 1px solid var(--brand-green);
+  border: 1px solid var(--brand-green-deep);
   border-radius: 8px;
   background: var(--dark-button);
   color: var(--dark-text);

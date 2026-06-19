@@ -17,7 +17,7 @@
       var(--dark-banner) 100%
     );
   box-shadow: var(--glass-shadow-dark);
-  border-bottom : 1.4px solid var(--brand-green);
+  border-bottom : 1.4px solid var(--brand-green-deep);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -51,7 +51,7 @@ p {
   top: 1.2rem;
   left: 4rem;
   z-index: 11;
-  border: 1px solid var(--brand-green);
+  border: 1px solid var(--brand-green-deep);
   background: var(--dark-button);
   color: var(--dark-text);
   border-radius: 6px;
@@ -71,7 +71,7 @@ p {
 .button {
   background: var(--dark-button);
   color: var(--dark-text);
-  border: 1px solid var(--brand-green);
+  border: 1px solid var(--brand-green-deep);
   border-radius: 10px;
   padding: 0.72em 1.2em;
   font-family: var(--font-family);
@@ -90,7 +90,7 @@ p {
 }
 .button:hover {
   background: var(--dark-button-hover);
-  border-color: var(--brand-green);
+  border-color: var(--brand-green-deep);
   transform: translateY(-1px);
 }
 
@@ -154,7 +154,7 @@ p {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  border: 1px solid var(--brand-green);  
+  border: 1px solid var(--brand-green-deep);  
   border-radius: 36px;
 }
 .switch-bg::before,
@@ -399,7 +399,7 @@ p {
 .card {
   background: var(--card-bg);
   border-radius: 10px;
-  border: 1.5px solid var(--brand-green);
+  border: 1.5px solid var(--brand-green-deep);
   box-shadow: var(--glass-shadow-dark);
   padding: 1.35em;
   font-weight: 550;
