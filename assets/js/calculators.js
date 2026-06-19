@@ -810,45 +810,72 @@ const calculators = {
                     return { w: size.w, h: size.h, freeRects: [{ x:0,y:0,w:size.w,h:size.h }], items: [] };
                 }
 
-                // Choose sheet size for new sheet: smallest area that can fit the piece
+                // Choose sheet size for new sheet based on how well it can fit the current piece and remaining pieces
                 function chooseSheetSizeForPiece(piece, remainingPieces) {
+                    function canFit(p, size) {
+                        return (p.w <= size.w && p.h <= size.h) || (p.h <= size.w && p.w <= size.h);
+                    }
 
-    let bestSheet = null;
-    let bestScore = -1;
+                    function placePieceInSheet(sheet, p) {
+                        for (let i = 0; i < sheet.freeRects.length; i++) {
+                            const r = sheet.freeRects[i];
+                            const orientations = [[p.w, p.h], [p.h, p.w]];
+                            for (let ori of orientations) {
+                                const pw = ori[0];
+                                const ph = ori[1];
+                                if (pw <= r.w && ph <= r.h) {
+                                    sheet.items.push({ x: r.x, y: r.y, w: pw, h: ph, label: p.label });
+                                    const rightW = r.w - pw;
+                                    const bottomH = r.h - ph;
+                                    const newRects = [];
+                                    if (rightW > 0) newRects.push({ x: r.x + pw, y: r.y, w: rightW, h: ph });
+                                    if (bottomH > 0) newRects.push({ x: r.x, y: r.y + ph, w: r.w, h: bottomH });
+                                    sheet.freeRects.splice(i, 1);
+                                    sheet.freeRects.push(...newRects);
+                                    sheet.freeRects = sheet.freeRects.filter(fr => fr.w > 0 && fr.h > 0);
+                                    sheet.freeRects = sheet.freeRects.filter(function(a) {
+                                        return !sheet.freeRects.some(function(b) {
+                                            if (a === b) return false;
+                                            return a.x >= b.x && a.y >= b.y && a.x + a.w <= b.x + b.w && a.y + a.h <= b.y + b.h;
+                                        });
+                                    });
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;
+                    }
 
-    for (let sheet of sheets) {
+                    function simulateSheetSize(size) {
+                        const sheet = { w: size.w, h: size.h, freeRects: [{ x: 0, y: 0, w: size.w, h: size.h }], items: [] };
+                        if (!placePieceInSheet(sheet, piece)) return -1;
 
-        // Can the current piece fit?
-        const currentFits =
-            (piece.w <= sheet.w && piece.h <= sheet.h) ||
-            (piece.h <= sheet.w && piece.w <= sheet.h);
+                        const remaining = remainingPieces.slice().sort((a, b) => b.area - a.area);
+                        let placedCount = 1;
+                        for (let other of remaining) {
+                            if (placePieceInSheet(sheet, other)) {
+                                placedCount++;
+                            }
+                        }
+                        return placedCount;
+                    }
 
-        if (!currentFits) continue;
+                    let bestSheet = null;
+                    let bestScore = -1;
+                    let bestArea = Infinity;
 
-        // Count how many remaining pieces could also fit
-        let score = 0;
+                    for (let sheet of sheets) {
+                        if (!canFit(piece, sheet)) continue;
+                        const score = simulateSheetSize(sheet);
+                        if (score > bestScore || (score === bestScore && sheet.w * sheet.h < bestArea)) {
+                            bestScore = score;
+                            bestArea = sheet.w * sheet.h;
+                            bestSheet = sheet;
+                        }
+                    }
 
-        for (let other of remainingPieces) {
-
-            const fits =
-                (other.w <= sheet.w && other.h <= sheet.h) ||
-                (other.h <= sheet.w && other.w <= sheet.h);
-
-            if (fits) score++;
-        }
-
-        // Higher score wins
-        if (score > bestScore) {
-
-            bestScore = score;
-
-            bestSheet = sheet;
-
-        }
-    }
-
-    return bestSheet;
-}
+                    return bestSheet;
+                }
 
                 // Place piece into a sheet using simple guillotine split
                 function placeInSheet(sheet, piece) {

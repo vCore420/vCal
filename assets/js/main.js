@@ -170,15 +170,23 @@ function bindCalculatorHistoryEvents(calcKey, calc) {
   if (!historyHost) return;
   historyHost.onclick = async function(event) {
     const target = event.target;
-    if (target.classList.contains('calc-history-item')) {
-      const index = parseInt(target.dataset.index, 10);
-      await restoreCalculatorHistoryEntry(calcKey, calc, index);  // Now awaited
-    } else if (target.classList.contains('calc-history-delete')) {
+    const deleteButton = target.closest('.calc-history-delete');
+    const historyItem = target.closest('.calc-history-item');
+
+    if (deleteButton) {
       event.stopPropagation();
-      const item = target.closest('.calc-history-item');
-      const index = parseInt(item.dataset.index, 10);
+      if (!historyItem) return;
+      const index = parseInt(historyItem.dataset.index, 10);
+      if (Number.isNaN(index)) return;
       await deleteCalculatorHistoryEntry(calcKey, index);
-      await refreshCalculatorHistory(calcKey, calc); // Refresh after delete
+      await refreshCalculatorHistory(calcKey, calc);
+      return;
+    }
+
+    if (historyItem) {
+      const index = parseInt(historyItem.dataset.index, 10);
+      if (Number.isNaN(index)) return;
+      await restoreCalculatorHistoryEntry(calcKey, calc, index);
     }
   };
 }
