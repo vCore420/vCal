@@ -33,7 +33,6 @@ body {
   align-items: center;
 }
 
-/* Hide inactive sections */
 .hidden {
   display: none;
   opacity: 0;
@@ -41,7 +40,8 @@ body {
   transition: opacity 0.3s;
 }
 
-/* Main content containers */
+
+/* ----------- Main content containers ---------- */
 #department-grid,
 #calculator-selection-grid,
 #calculator-logic-container {
@@ -86,9 +86,9 @@ body {
     ),
     var(--card-bg);
   box-shadow: var(--glass-shadow-dark);
-  border: 1px solid var(--brand-green-deep);
+  border: 2px solid var(--brand-green-deep);
   border-radius: 12px;
-  max-width: 50%;
+  max-width: 55%;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -241,7 +241,7 @@ body {
     );
   border-color: rgba(87, 201, 111, 0.2);
   color: #f7faf8;
-  box-shadow: 0 12px 24px rgba(47, 133, 68, 0.16);
+  box-shadow: var(--glass-shadow-dark);
 }
 
 #calcRunBtn:hover,
@@ -468,7 +468,8 @@ body.theme-light .result-number {
   color: var(--dark-text);
 }
 
-/* Product Info Section */
+
+/* ---------- Product Info Section ---------- */
 .product-info p,
 .product-info .product-section p {
   color: var(--dark-text) !important;
@@ -511,7 +512,6 @@ body.theme-light .result-number {
   margin: 0.5em 0 0 0;
 }
 
-/* Fix this later, works its just not clean enough for me*/
 .product-info,
 .product-info h2,
 .product-info p,
@@ -522,7 +522,8 @@ body.theme-light .result-number {
   text-align: left;
 } 
 
-/* Fine print */
+
+/* ---------- Fine print ---------- */
 .fine-print {
   flex-shrink: 0;
   color: var(--dark-text);
@@ -534,6 +535,8 @@ body.theme-light .result-number {
   font-size: 0.86rem;
 }
 
+
+/* ---------- Quick Calculator ---------- */
 .quick-calc-bubble {
   font-family: var(--font-family);
   position: fixed;
@@ -542,7 +545,7 @@ body.theme-light .result-number {
   z-index: 11;
   width: 56px;
   height: 56px;
-  border: 1.5px solid var(--brand-green-soft);
+  border: 2px solid var(--brand-green-deep);
   border-radius: 6px;
   background:
     linear-gradient(
@@ -565,7 +568,7 @@ body.theme-light .result-number {
   z-index: 12;
   width: min(92vw, 360px);
   padding: 0.95rem;
-  border: 1px solid var(--brand-green-deep);
+  border: 2px solid var(--brand-green-deep);
   border-radius: 12px;
   background:
     linear-gradient(
@@ -665,7 +668,8 @@ body.theme-light .quick-calc-equals {
   background: linear-gradient(180deg, rgba(62, 174, 88, 0.16) 0%, rgba(231, 221, 226, 0.18) 100%);
 }
 
-/* Responsive styles for vertical phone screens */
+
+/* ----------- Responsive styles for vertical phone screens ----------- */
 @media (max-width: 600px) {
   html, body {
     width: 100%;
@@ -686,7 +690,7 @@ body.theme-light .quick-calc-equals {
   }
 
   h1 {
-    font-size: 1.45rem;
+    font-size: 1.25rem;
     max-width: 100%;
     line-height: 1.08;
   }
@@ -701,6 +705,7 @@ body.theme-light .quick-calc-equals {
     max-width: 100%;
     margin-top: 0.45rem;
     padding: 0 0.25rem;
+    font-size: 0.85rem;
   }
 
   .top-back-btn {
@@ -806,7 +811,7 @@ body.theme-light .quick-calc-equals {
   }
 
   .card-thumb {
-    max-width: 76px;
+    max-width: 186px;
   }
 
   .card .button {
@@ -955,22 +960,7 @@ body.theme-light .quick-calc-equals {
     padding: 0.5em 0.8em;
     margin-right: 1em;
   }
-  /*
-  .switch {
-    width: 20px;
-    height: 10px;  
-    margin-right: 10px;
-  }
-
-  .slider:before {
-    height: 8px; width: 8px;
-    left: 1px; bottom: 1px;
-  }
-
-  .switch input:checked + .slider:before {
-    transform: translateX(10px);
-  }
-*/
+  
   .fine-print {
     font-size: 0.76rem;
     padding-top: 0.4rem;
@@ -982,7 +972,7 @@ body.theme-light .quick-calc-equals {
     top: 3.5rem;
     width: 38px;
     height: 38px;
-    border-radius: 18px;
+    border-radius: 6px;
     font-size: 0.75rem;
     box-shadow: none;
   }
