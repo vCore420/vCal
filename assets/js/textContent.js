@@ -146,73 +146,121 @@ const textContent = {
             ]
         },
         {
-            key: "sliders",
-            name: "Sliders",
-            synopsis: "Information about all Lifestyle and Crim Sliders.",
-            details: [
-              {
-                heading: "Overview",
-                content: "Lifestyle and Crim sliding doors are designed for security and aesthetics. Available in multiple finishes."
-              },
-              {
-                heading: "Product Info",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                heading: "Product Specs",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                  heading: "Links",
-                  content: [
-                    "Placeholder",
-                    "Placeholder",
-                    "Placeholder"
-                  ]
-              }
-           ]
+          key: "crimsafeSlidingDoors",
+          name: "Crimsafe Sliding Doors",
+          synopsis: "Premium stainless steel sliding security door system designed to provide maximum security, airflow and unobstructed views for large openings.",
+          details: [
+            {
+              heading: "Overview",
+              content: "Crimsafe Sliding Doors are a premium security screen system designed for sliding and stacker door applications. Using Crimsafe's patented Screw-Clamp technology and high tensile stainless steel mesh, they provide superior security while maintaining airflow, natural light and outward visibility."
+            },
+            {
+              heading: "Product Info",
+              content: [
+                "Premium security solution for sliding and stacker doors",
+                "Patented Screw-Clamp technology secures the mesh without rivets",
+                "High tensile 304 grade stainless steel mesh",
+                "Provides excellent airflow without compromising security",
+                "Allows unobstructed outward views",
+                "Designed for large door openings",
+                "Smooth sliding operation",
+                "Custom manufactured to suit each opening",
+                "Available in multiple powder coated frame colours",
+                "Suitable for residential and commercial applications",
+                "Manufactured in New Zealand",
+                "Backed by a 10 year structural and installation warranty"
+              ]
+            },
+            {
+              heading: "Product Specs",
+              content: [
+                "304 Grade Stainless Steel Mesh",
+                "Patented Screw-Clamp Technology",
+                "Powder Coated Aluminium Frame",
+                "Custom sizing available",
+                "Single and multiple panel configurations",
+                "Residential and commercial applications",
+                "Corrosion resistant materials",
+                "Low maintenance construction",
+                "Large opening capability",
+                "10 year structural and installation warranty"
+              ]
+            },
+            {
+              heading: "Links",
+              content: [
+                "Crimsafe Sliding Doors:",
+                "https://crimsafe.nz/product/sliding-doors/",
+
+                "Crimsafe Brochure:",
+                "https://crimsafe.nz/wp-content/uploads/2022/07/Crimsafe-NZ_Residential-Brochure_202207.pdf",
+
+                "Care Guide:",
+                "https://crimsafe.nz/wp-content/uploads/2020/11/200925-NZ-Care-Guide-A4-Web-CS20006_final.pdf",
+
+                "Crimsafe Home:",
+                "https://crimsafe.nz/"
+              ]
+            }
+          ]
         },
         {
-            key: "inswings",
-            name: "Inswings",
-            synopsis: "Information about Crim Inswings.",
-            details: [
-              {
-                heading: "Overview",
-                content: "Placeholder."
-              },
-              {
-                heading: "Product Info",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                heading: "Product Specs",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                  heading: "Links",
-                  content: [
-                    "Placeholder",
-                    "Placeholder",
-                    "Placeholder"
-                  ]
-              }
+          key: "crimsafeInswing",
+          name: "Crimsafe Inswing",
+          synopsis: "A secure inward opening emergency exit window system that combines Crimsafe security with safe and rapid emergency egress.",
+          details: [
+            {
+              heading: "Overview",
+              content: "Safe-S-Cape is Crimsafe's emergency exit window solution designed to maintain full security while allowing occupants to quickly and safely exit a property during an emergency. The system opens inward from the inside while remaining fully secure from the outside."
+            },
+            {
+              heading: "Product Info",
+              content: [
+                "Designed specifically for emergency escape situations",
+                "Maintains full Crimsafe security protection",
+                "Opens inward from inside the home",
+                "Allows rapid emergency egress",
+                "Cannot be opened from the outside",
+                "Patented Screw-Clamp technology",
+                "High tensile 304 grade stainless steel mesh",
+                "Suitable for bedrooms and emergency exit locations",
+                "Provides airflow and unobstructed views",
+                "Custom manufactured to suit each opening",
+                "Manufactured in New Zealand",
+                "Backed by a 10 year structural and installation warranty"
+              ]
+            },
+            {
+              heading: "Product Specs",
+              content: [
+                "304 Grade Stainless Steel Mesh",
+                "Patented Screw-Clamp Technology",
+                "Inward opening emergency exit design",
+                "Internal release mechanism",
+                "Powder Coated Aluminium Frame",
+                "Custom manufactured sizing",
+                "Residential applications",
+                "Corrosion resistant materials",
+                "Low maintenance construction",
+                "10 year structural and installation warranty"
+              ]
+            },
+            {
+              heading: "Links",
+              content: [
+                "Safe-S-Cape:",
+                "https://crimsafe.nz/products/safe-s-cape/",
+
+                "Crimsafe Brochure:",
+                "https://crimsafe.nz/wp-content/uploads/2022/07/Crimsafe-NZ_Residential-Brochure_202207.pdf",
+
+                "Care Guide:",
+                "https://crimsafe.nz/wp-content/uploads/2020/11/200925-NZ-Care-Guide-A4-Web-CS20006_final.pdf",
+
+                "Crimsafe Home:",
+                "https://crimsafe.nz/"
+              ]
+            }
           ]
         },
         {
@@ -335,39 +383,77 @@ const textContent = {
             ]
         },
         {
-            key: "hissScreens",
-            name: "Hiss Screens",
-            synopsis: "Information about all Hiss Screens.",
-            details: [
-              {
-                heading: "Overview",
-                content: "Placeholder."
-              },
-              {
-                heading: "Product Info",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                heading: "Product Specs",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                  heading: "Links",
-                  content: [
-                    "Placeholder",
-                    "Placeholder",
-                    "Placeholder"
-                  ]
-               }
-           ]
+          key: "pleatedFlyScreens",
+          name: "Pleated Fly Screens",
+          synopsis: "Premium retractable pleated insect screen system designed to provide smooth operation, unobstructed views and effective insect protection for large door and window openings.",
+          details: [
+            {
+              heading: "Overview",
+              content: "Pleated Fly Screens by Reliable Screen Supply are custom made retractable insect screens designed for doors, stacker sliders, bifold doors and large openings. Their pleated mesh design allows the screen to smoothly retract away when not in use while maintaining airflow and keeping insects out."
+            },
+            {
+              heading: "Product Info",
+              content: [
+                "Premium retractable pleated insect screen system",
+                "Custom manufactured to suit each opening",
+                "Ideal for stacker doors, sliding doors and bifold systems",
+                "Pleated mesh folds neatly away when not in use",
+                "Provides excellent airflow while keeping insects outside",
+                "Smooth and lightweight operation",
+                "Low profile bottom track available",
+                "Suitable for large openings",
+                "Minimal visual impact when retracted",
+                "Strong aluminium frame construction",
+                "Designed for residential and commercial applications",
+                "Low maintenance design",
+                "Manufactured for New Zealand conditions"
+              ]
+            },
+            {
+              heading: "Product Specs",
+              content: [
+                "Custom widths and heights available",
+                "Pleated polyester insect mesh",
+                "Powder coated aluminium frame",
+                "Horizontal retractable operation",
+                "Low profile track options",
+                "Single and double panel configurations",
+                "Indoor and outdoor applications",
+                "Multiple frame colours available",
+                "Low maintenance construction",
+                "Suitable for oversized openings"
+              ]
+            },
+            {
+              heading: "Applications",
+              content: [
+                "Sliding doors",
+                "Stacker doors",
+                "Bifold doors",
+                "French doors",
+                "Patio doors",
+                "Large window openings",
+                "Residential homes",
+                "Commercial buildings"
+              ]
+            },
+            {
+              heading: "Links",
+              content: [
+                "Reliable Screen Supply:",
+                "https://reliablescreen.co.nz/",
+
+                "Detachable Pleated Screen:",
+                "https://reliablescreen.co.nz/",
+
+                "Fly Screen Care & Maintenance:",
+                "https://reliablescreen.co.nz/",
+
+                "Warranty Information:",
+                "https://reliablescreen.co.nz/"
+              ]
+            }
+          ]
         },
         {
           key: "santaFeSolunaBlinds",
@@ -542,39 +628,61 @@ const textContent = {
           ]
         },
         {
-            key: "extShutters",
-            name: "Ext Shutters",
-            synopsis: "Information about External Shutters.",
-            details: [
-              {
-                heading: "Overview",
-                content: "Placeholder."
-              },
-              {
-                heading: "Product Info",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                heading: "Product Specs",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                  heading: "Links",
-                  content: [
-                    "Placeholder",
-                    "Placeholder",
-                    "Placeholder"
-                  ]
-               }
-           ]
+          key: "extShutters",
+          name: "Ext Shutters",
+          synopsis: "Premium aluminium outdoor plantation shutter system designed to provide privacy, weather protection and adjustable airflow for year-round outdoor living.",
+          details: [
+            {
+              heading: "Overview",
+              content: "Muriwai Shutters are a premium aluminium shutter system designed for outdoor living areas, patios, decks and balconies. Their adjustable louvre blades allow users to control sunlight, airflow and privacy while creating a stylish and durable outdoor enclosure."
+            },
+            {
+              heading: "Product Info",
+              content: [
+                "Premium outdoor aluminium shutter system",
+                "Adjustable louvre blades provide complete control over light and airflow",
+                "Creates year-round outdoor living spaces",
+                "Provides privacy without fully enclosing an area",
+                "Suitable for patios, decks, pergolas and balconies",
+                "Can be installed as hinged, sliding, bi-fold or fixed panels",
+                "Strong aluminium construction",
+                "Powder coated for durability and corrosion resistance",
+                "Designed for New Zealand weather conditions",
+                "Low maintenance and easy to clean",
+                "Modern architectural appearance",
+                "Custom manufactured to suit individual openings",
+                "Suitable for residential and commercial applications"
+              ]
+            },
+            {
+              heading: "Product Specs",
+              content: [
+                "Extruded aluminium construction",
+                "Adjustable louvre blade system",
+                "Custom panel sizes available",
+                "Hinged, sliding, bi-fold and fixed configurations",
+                "Powder coated finishes",
+                "Weather resistant components",
+                "Low maintenance design",
+                "Residential and commercial applications",
+                "Custom manufactured to order",
+                "Designed for New Zealand conditions"
+              ]
+            },
+            {
+              heading: "Links",
+              content: [
+                "Muriwai Shutters:",
+                "https://shadeelements.co.nz/screen/muriwai-shutters/",
+                "Shade Elements Home:",
+                "https://shadeelements.co.nz/",
+                "Outdoor Screens:",
+                "https://shadeelements.co.nz/screens/",
+                "Contact:",
+                "https://shadeelements.co.nz/contact/"
+              ]
+            }
+          ]
         },
         {
             key: "rivieraPremium",
@@ -726,179 +834,225 @@ const textContent = {
             ]
         },
         {
-            key: "waveshades",
-            name: "Waveshades",
-            synopsis: "Informations about Waveshades.",
-            details: [
-              {
-                heading: "Overview",
-                content: "Placeholder."
-              },
-              {
-                heading: "Product Info",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                heading: "Product Specs",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                  heading: "Links",
-                  content: [
-                    "Placeholder",
-                    "Placeholder",
-                    "Placeholder"
-                  ]
-               }
-           ]
+          key: "waveshade",
+          name: "WaveShade",
+          synopsis: "Premium outdoor weather protection system combining retractable fabric technology with stylish architectural design to create comfortable year-round outdoor living spaces.",
+          details: [
+            {
+              heading: "Overview",
+              content: "WaveShade is a New Zealand outdoor shading system designed to provide protection from sun, light rain and wind while maintaining an open and modern appearance. It is commonly installed over decks, patios, courtyards and outdoor entertaining areas to extend the usability of outdoor spaces throughout the year."
+            },
+            {
+              heading: "Product Info",
+              content: [
+                "Premium retractable outdoor shading system",
+                "Designed for New Zealand weather conditions",
+                "Provides protection from harsh UV, light rain and glare",
+                "Extends outdoor living spaces for year-round use",
+                "Retractable design allows flexibility between open and covered spaces",
+                "Modern architectural appearance suitable for residential and commercial properties",
+                "Custom manufactured to suit individual installations",
+                "Can be installed onto existing structures or incorporated into new builds",
+                "Low maintenance design",
+                "Available in a range of frame and fabric colours",
+                "Suitable for decks, patios, courtyards and entertainment areas",
+                "Designed to maintain airflow while providing shade"
+              ]
+            },
+            {
+              heading: "Product Specs",
+              content: [
+                "Custom made sizing",
+                "Outdoor rated fabric system",
+                "Powder coated aluminium framework",
+                "Retractable operation",
+                "Weather resistant materials",
+                "Residential and commercial applications",
+                "Multiple colour options available",
+                "Wall mounted installation",
+                "Low maintenance construction",
+                "Designed for New Zealand environments"
+              ]
+            },
+            {
+              heading: "Links",
+              content: [
+                "WaveShade Home:",
+                "https://www.waveshade.co.nz/"
+              ]
+            }
+          ]
         },
         {
-            key: "awnings",
-            name: "Awnings",
-            synopsis: "Information about Awnings.",
-            details: [
-              {
-                heading: "Overview",
-                content: "Placeholder."
-              },
-              {
-                heading: "Product Info",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                heading: "Product Specs",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                  heading: "Links",
-                  content: [
-                    "Placeholder",
-                    "Placeholder",
-                    "Placeholder"
-                  ]
-               }
-           ]
+          key: "awnings",
+          name: "Awnings",
+          synopsis: "Retractable and fixed outdoor awning systems designed to provide sun protection and extend outdoor living spaces.",
+          details: [
+            {
+              heading: "Overview",
+              content: "Johnson & Couzins awnings provide practical and stylish weather protection for patios, decks, windows and outdoor entertainment areas. Available in multiple styles, fabrics and operating systems."
+            },
+            {
+              heading: "Product Info",
+              content: [
+                "Provides shade and UV protection",
+                "Helps reduce indoor heat gain",
+                "Available as manual or motorised systems",
+                "Wide range of fabric colours and patterns",
+                "Custom made to suit each opening",
+                "Suitable for residential and commercial properties",
+                "Can be integrated with wind and sun sensors",
+                "High quality aluminium components",
+                "Designed for New Zealand conditions",
+                "Enhances outdoor living spaces"
+              ]
+            },
+            {
+              heading: "Product Specs",
+              content: [
+                "Custom widths available",
+                "Powder coated aluminium frames",
+                "Acrylic and outdoor fabric options",
+                "Manual crank or motorised operation",
+                "Weather resistant components",
+                "Remote control options available",
+                "Sensor automation available",
+                "Low maintenance design"
+              ]
+            },
+            {
+              heading: "Links",
+              content: [
+                "Johnson & Couzins:",
+                "https://www.johnsonandcouzins.co.nz",
+                "Outdoor Living:",
+                "https://www.johnsonandcouzins.co.nz/outdoor-living",
+                "Contact:",
+                "https://www.johnsonandcouzins.co.nz/contact"
+              ]
+            }
+          ]
         },
         {
-            key: "louvers",
-            name: "Louvers",
-            synopsis: "Information about Louvers.",
-            details: [
-              {
-                heading: "Overview",
-                content: "Placeholder."
-              },
-              {
-                heading: "Product Info",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                heading: "Product Specs",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                  heading: "Links",
-                  content: [
-                    "Placeholder",
-                    "Placeholder",
-                    "Placeholder"
-                  ]
-               }
-           ]
+          key: "skyLouvers",
+          name: "Sky Louvers",
+          synopsis: "Custom aluminium louvre roofing system designed to provide adjustable sun, shade and weather protection for outdoor living spaces.",
+          details: [
+            {
+              heading: "Overview",
+              content: "Sky Louvers are a premium outdoor roofing solution that allow homeowners to control sunlight, airflow and rain protection. The adjustable aluminium blades can be rotated to create an open-air environment or closed to provide shelter from the elements."
+            },
+            {
+              heading: "Product Info",
+              content: [
+                "Motorised adjustable louvre roof system",
+                "Creates versatile year-round outdoor living areas",
+                "Provides sun, shade and rain protection",
+                "Integrated guttering and water drainage system",
+                "Can be attached to existing buildings or freestanding",
+                "Available with optional LED lighting, blinds and heating",
+                "Powder coated aluminium construction",
+                "Custom manufactured to suit each installation",
+                "Designed for New Zealand weather conditions",
+                "Low maintenance and corrosion resistant"
+              ]
+            },
+            {
+              heading: "Product Specs",
+              content: [
+                "Extruded aluminium blades",
+                "Motorised operation",
+                "Integrated guttering",
+                "Custom sizing available",
+                "Multiple powder coat colours",
+                "Wall mounted or freestanding options",
+                "Low maintenance construction",
+                "Suitable for residential and commercial applications"
+              ]
+            },
+            {
+              heading: "Links",
+              content: [
+                "Johnson & Couzins:",
+                "https://www.johnsonandcouzins.co.nz",
+                "Outdoor Living:",
+                "https://www.johnsonandcouzins.co.nz/outdoor-living",
+                "Contact:",
+                "https://www.johnsonandcouzins.co.nz/contact"
+              ]
+            }
+          ]
         },
         {
-            key: "shadeSails",
-            name: "Shade Sails",
-            synopsis: "Information about Shade Sails.",
-            details: [
-              {
-                heading: "Overview",
-                content: "Placeholder."
-              },
-              {
-                heading: "Product Info",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                heading: "Product Specs",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                  heading: "Links",
-                  content: [
-                    "Placeholder",
-                    "Placeholder",
-                    "Placeholder"
-                  ]
-               }
-           ]
-        },
-        {
-            key: "robusters",
-            name: "Robusters",
-            synopsis: "Information about Robusters.",
-            details: [
-              {
-                heading: "Overview",
-                content: "Placeholder."
-              },
-              {
-                heading: "Product Info",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                heading: "Product Specs",
-                content: [
-                  "Placeholder",
-                  "Placeholder",
-                  "Placeholder"
-                ]
-              },
-              {
-                  heading: "Links",
-                  content: [
-                    "Placeholder",
-                    "Placeholder",
-                    "Placeholder"
-                  ]
-               }
-           ]
+          key: "shadeSails",
+          name: "Shade Sails",
+          synopsis: "Custom designed architectural shade sail systems that provide stylish UV protection and weather shelter for outdoor living areas.",
+          details: [
+            {
+              heading: "Overview",
+              content: "Rainbow Shade's Shade Sails are custom manufactured outdoor shade structures designed to provide effective sun protection while enhancing outdoor spaces. Built specifically for New Zealand conditions, they are suitable for residential, commercial and educational environments."
+            },
+            {
+              heading: "Product Info",
+              content: [
+                "Custom designed architectural shade sail systems",
+                "Designed and manufactured for New Zealand conditions",
+                "Provides excellent UV protection",
+                "Creates comfortable year-round outdoor spaces",
+                "Suitable for residential and commercial applications",
+                "Can be installed over decks, patios, pools and playgrounds",
+                "Each sail is custom measured and manufactured",
+                "Available in various colours and fabric options",
+                "Heavy-duty stainless steel fixings",
+                "Modern architectural appearance",
+                "Allows airflow while providing shade",
+                "Low maintenance materials",
+                "Engineered to withstand New Zealand environments",
+                "Professional installation recommended"
+              ]
+            },
+            {
+              heading: "Product Specs",
+              content: [
+                "High quality shade cloth fabrics",
+                "Custom made sizing",
+                "Heavy-duty stainless steel fittings",
+                "Custom post and fixing options",
+                "UV stabilised materials",
+                "Multiple fabric colours available",
+                "Breathable fabric design",
+                "Low maintenance construction",
+                "Suitable for residential and commercial installations",
+                "Custom engineered for each site"
+              ]
+            },
+            {
+              heading: "Applications",
+              content: [
+                "Patios",
+                "Decks",
+                "Outdoor dining areas",
+                "Swimming pools",
+                "Schools and playgrounds",
+                "Commercial outdoor spaces",
+                "Courtyards",
+                "Car parking areas"
+              ]
+            },
+            {
+              heading: "Links",
+              content: [
+                "Rainbow Shade Home:",
+                "https://rainbowshade.co.nz/",
+                "Shade Sails:",
+                "https://rainbowshade.co.nz/shade-sails/",
+                "Gallery:",
+                "https://rainbowshade.co.nz/gallery/",
+                "Contact:",
+                "https://rainbowshade.co.nz/contact/"
+              ]
+            }
+          ]
         },
       ]
     }
