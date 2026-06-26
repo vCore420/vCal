@@ -995,8 +995,8 @@ function closeCalculator() {
 function createRowElement(rowData, fields) {
   const item = document.createElement('div');
   item.className = 'row-item';
-  item.style.display = 'flex';
-  item.style.gap = '8px';
+  item.style.display = 'wrap';
+  item.style.gap = '6px';
   item.style.marginBottom = '6px';
 
   const fieldConfigs = {

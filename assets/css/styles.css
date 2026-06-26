@@ -711,10 +711,9 @@ body.theme-light .quick-calc-equals {
   .top-back-btn {
     top: 2rem;
     left: 0.75rem;
-    min-height: 38px;
     font-size: 0.78rem;
-    padding: 0.2rem 0.4rem;
-    border-radius: 12px;
+    padding: 0.3rem 0.4rem;
+    border-radius: 6px;
   }
 
   .theme-switch {
@@ -802,7 +801,7 @@ body.theme-light .quick-calc-equals {
     margin: 0;
     padding: 1.15rem 1rem;
     min-height: auto;
-    border-radius: 18px;
+    border-radius: 8px;
   }
 
   .card-label {
@@ -821,14 +820,14 @@ body.theme-light .quick-calc-equals {
   .card-modal-content {
     max-width: calc(100vw - 1.5rem);
     padding: 1.2rem 0.9rem;
-    border-radius: 16px;
+    border-radius: 8px;
   }
 
   #calculator-logic-container {
     max-width: 90%;
     padding: 1rem 1rem 1rem 1rem;
     margin-top: 7rem;
-    border-radius: 18px;
+    border-radius: 8px;
   }
 
   #calculator-logic-container h2 {
@@ -863,7 +862,7 @@ body.theme-light .quick-calc-equals {
   #calculator-logic-container input[type="text"] {
     padding: 0.78rem 0.85rem;
     font-size: 0.98rem;
-    border-radius: 12px;
+    border-radius: 8px;
   }
 
   .radio-group,
@@ -879,7 +878,7 @@ body.theme-light .quick-calc-equals {
     justify-content: space-between;
     padding: 0.7rem 0.55rem;
     font-size: 0.92rem;
-    border-radius: 12px;
+    border-radius: 8px;
   }
 
   #calcResult {
@@ -893,9 +892,17 @@ body.theme-light .quick-calc-equals {
     padding: 0.78rem 0;
   }
 
+  .row-width, .row-height {
+    max-width: 85px;
+  }
+
+  .row-qty {
+    max-width: 60px;
+  }
+
   .calc-result-block {
     padding: 0.9rem;
-    border-radius: 16px;
+    border-radius: 8px;
   }
 
   .calc-result-line {
@@ -931,7 +938,7 @@ body.theme-light .quick-calc-equals {
 
   .calc-history-item {
     padding: 0.85rem 0.9rem;
-    border-radius: 14px;
+    border-radius: 8px;
   }
 
   .calc-history-title {
@@ -944,7 +951,7 @@ body.theme-light .quick-calc-equals {
 
   .product-info {
     padding: 1.1rem 0.95rem;
-    border-radius: 16px;
+    border-radius: 8px;
     font-size: 0.98rem;
   }
 
@@ -963,26 +970,25 @@ body.theme-light .quick-calc-equals {
   
   .fine-print {
     font-size: 0.76rem;
-    padding-top: 0.4rem;
+    padding-top: 0.8rem;
     padding-bottom: 0.9rem;
   }
 
   .quick-calc-bubble {
-    right: 1rem;
-    top: 3.5rem;
+    right: 0.5rem;
+    top: 28rem;
     width: 38px;
     height: 38px;
     border-radius: 6px;
     font-size: 0.75rem;
-    box-shadow: none;
   }
 
   .quick-calc-panel {
-    right: 1rem;
-    top: 4rem;
+    right: 0.5rem;
+    top: 6rem;
     width: min(calc(100vw - 1.5rem), 320px);
     padding: 0.8rem;
-    border-radius: 18px;
+    border-radius: 8px;
   }
 
   .quick-calc-title {
