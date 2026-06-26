@@ -1000,9 +1000,9 @@ function createRowElement(rowData, fields) {
   item.style.marginBottom = '6px';
 
   const fieldConfigs = {
-    length: { className: 'row-width', placeholder: 'length', width: '90px' },
-    width: { className: 'row-width', placeholder: 'width', width: '90px' },
-    height: { className: 'row-height', placeholder: 'height', width: '90px' },
+    length: { className: 'row-width', placeholder: 'length', width: '240px' },
+    width: { className: 'row-width', placeholder: 'width', width: '180px' },
+    height: { className: 'row-height', placeholder: 'height', width: '180px' },
     qty: { className: 'row-qty', placeholder: 'qty', width: '70px' },
     preferred: { className: 'row-preferred', placeholder: 'preferred', width: '40px' }
   };

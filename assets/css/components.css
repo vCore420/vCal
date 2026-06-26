@@ -53,10 +53,10 @@ p {
 /* ----------- Buttons ---------- */
 .top-back-btn {
   position: absolute;
-  top: 1.2rem;
+  top: 1rem;
   left: 4rem;
   z-index: 11;
-  border: 1.5px solid var(--brand-green-deep);
+  border: var(--brand-green-border);
   background: var(--dark-button);
   color: var(--dark-text);
   border-radius: 6px;
@@ -64,18 +64,18 @@ p {
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: var(--dark-shadow);
+  box-shadow: var(--brand-green-shadow-small);
 }
 
 .top-back-btn:hover {
   background: var(--dark-button-hover);
-  border: 1.5px solid var(--brand-green-soft);
+  border: 2px solid var(--brand-green-soft);
 }
 
 .button {
   background: var(--dark-button);
   color: var(--dark-text);
-  border: 1px solid var(--brand-green-deep);
+  border: var(--brand-green-border);
   border-radius: 10px;
   padding: 0.72em 1.2em;
   font-family: var(--font-family);
@@ -88,7 +88,7 @@ p {
   min-height: 44px;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s, color 0.2s;
-  box-shadow: var(--glass-shadow-dark);
+  box-shadow: var(--brand-green-shadow-small);
   width: 100%;
   margin-top: auto;
 }
@@ -116,8 +116,8 @@ p {
 .card {
   background: var(--card-bg);
   border-radius: 10px;
-  border: 2px solid var(--brand-green-deep);
-  box-shadow: var(--glass-shadow-dark);
+  border: var(--brand-green-border);
+  box-shadow: var(--brand-green-shadow);
   padding: 1.35em;
   font-weight: 550;
   display: flex;
@@ -220,23 +220,6 @@ p {
 
 
 /* ---------- Custom Theme Switch ----------- */
-.theme-switch {
-  position: absolute;
-  top: 1em;
-  right: 1em;
-  width: 85px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.theme-switch input[type="checkbox"] {
-  opacity: 0;
-  width: 0;
-  height: 0;
-  position: absolute;
-}
 
 /* Custom Theme Switch */
 .theme-switch {
@@ -272,7 +255,7 @@ p {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  border: 1px solid var(--brand-green-deep);  
+  border: var(--brand-green-border); 
   border-radius: 36px;
 }
 .switch-bg::before,

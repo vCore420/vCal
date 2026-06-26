@@ -85,8 +85,8 @@ body {
       rgba(255, 255, 255, 0.01) 100%
     ),
     var(--card-bg);
-  box-shadow: var(--glass-shadow-dark);
-  border: 2px solid var(--brand-green-deep);
+  box-shadow: var(--brand-green-shadow);
+  border: var(--brand-green-border);
   border-radius: 12px;
   max-width: 55%;
   width: 100%;
@@ -145,7 +145,7 @@ body {
   font-family: var(--font-family);
   font-size: 1rem;
   border-radius: 8px;
-  border: 1px solid var(--field-border);
+  border: var(--brand-green-border);
   background: var(--field-bg);
   color: var(--field-text);
   margin-bottom: 0.55em;
@@ -180,13 +180,14 @@ body {
   align-items: center;
   justify-content: flex-start;
   font-size: 0.95rem;
+  font-weight: 450;
   color: var(--dark-text);
   cursor: pointer;
   margin-bottom: 0;
   gap: 2rem;
   flex-direction: row;
   padding: 0.65em 0.9em;
-  border: 1px solid var(--brand-green-deep);
+  border: var(--brand-green-border);
   border-radius: 8px;
   background:
     linear-gradient(
@@ -241,7 +242,7 @@ body {
     );
   border-color: rgba(87, 201, 111, 0.2);
   color: #f7faf8;
-  box-shadow: var(--glass-shadow-dark);
+  box-shadow: var(--brand-green-shadow-small);
 }
 
 #calcRunBtn:hover,
@@ -264,7 +265,7 @@ body {
 .calc-result-block {
   margin-top: 0.5em;
   padding: 1rem 1.05rem;
-  border: 1px solid var(--brand-green-deep);
+  border: var(--brand-green-border);
   border-radius: 8px;
   background:
     linear-gradient(
@@ -275,7 +276,7 @@ body {
   color: var(--dark-text);
   text-align: left;
   line-height: 1.55;
-  box-shadow: 0 8px 20px rgba(12, 16, 18, 0.08);
+  box-shadow: var(--brand-green-shadow-small);
 }
 
 .calc-result-line {
@@ -325,14 +326,14 @@ body.theme-light .calc-result-block {
 }
 
 .calc-history-item {
-  width: 90%;
+  width: 85%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.35em;
   padding: 0.95em 1em;
   margin-top: 2px;
-  border: 1px solid var(--brand-green-deep);
+  border: var(--brand-green-border);
   border-radius: 8px;
   background:
     linear-gradient(
@@ -345,6 +346,7 @@ body.theme-light .calc-result-block {
   cursor: pointer;
   transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s, background 0.18s;
   position: relative;
+  box-shadow: var(--brand-green-shadow-small);
 }
 
 .calc-history-item:hover {
@@ -393,7 +395,6 @@ body.theme-light .calc-history-item {
       rgba(231, 221, 226, 0.2) 0%,
       rgba(255, 255, 255, 0.72) 100%
     );
-  box-shadow: 0 2px 10px rgba(20, 26, 29, 0.06);
 }
 
 .calc-history-delete {
@@ -482,7 +483,7 @@ body.theme-light .result-number {
   margin: 1em 0;
   color: var(--dark-text);
   font-size: 1.1em;
-  border: 1px solid var(--brand-green-deep);
+  border: var(--brand-green-border);
   background:
     linear-gradient(
       180deg,
@@ -545,7 +546,7 @@ body.theme-light .result-number {
   z-index: 11;
   width: 56px;
   height: 56px;
-  border: 2px solid var(--brand-green-deep);
+  border: var(--brand-green-border);
   border-radius: 6px;
   background:
     linear-gradient(
@@ -555,7 +556,7 @@ body.theme-light .result-number {
     ),
     var(--dark-banner);
   color: var(--dark-text);
-  box-shadow: var(--glass-shadow-dark);
+  box-shadow: var(--brand-green-shadow-small);
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
@@ -568,7 +569,7 @@ body.theme-light .result-number {
   z-index: 12;
   width: min(92vw, 360px);
   padding: 0.95rem;
-  border: 2px solid var(--brand-green-deep);
+  border: var(--brand-green-border);
   border-radius: 12px;
   background:
     linear-gradient(
@@ -577,7 +578,7 @@ body.theme-light .result-number {
       rgba(255, 255, 255, 0.01) 100%
     ),
     var(--dark-banner);
-  box-shadow: 0 18px 36px rgba(12, 16, 18, 0.22);
+  box-shadow: var(--brand-green-shadow-small);
   text-align: left;
 }
 
@@ -590,16 +591,15 @@ body.theme-light .result-number {
 
 .quick-calc-title {
   margin: 0;
-  font-size: 0.98rem;
+  font-size: 1rem;
   color: var(--dark-text);
 }
 
 .quick-calc-close {
   width: auto;
-  min-width: 36px;
   margin: 0;
-  padding: 0.35rem 0.35rem;
-  border: 1px solid var(--brand-green-deep);
+  padding: 0.30rem 0.60rem;
+  border: var(--brand-green-border);
   border-radius: 8px;
   background: var(--dark-button);
   color: var(--dark-text);
@@ -613,7 +613,7 @@ body.theme-light .result-number {
   box-sizing: border-box;
   margin-bottom: 0.75rem;
   padding: 0.8rem 0.9rem;
-  border: 1px solid var(--brand-green-deep);
+  border: var(--brand-green-border);
   border-radius: 8px;
   background: var(--field-bg);
   color: var(--field-text);
@@ -631,7 +631,7 @@ body.theme-light .result-number {
 
 .quick-calc-key {
   padding: 0.78rem 0;
-  border: 1px solid var(--brand-green-deep);
+  border: var(--brand-green-border);
   border-radius: 8px;
   background: var(--dark-button);
   color: var(--dark-text);

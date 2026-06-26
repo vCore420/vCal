@@ -6,6 +6,10 @@
   --brand-green-bright: #57c96f;
   --brand-green-soft: #87b58f;
   --brand-green-deep: #2f8544;
+  --brand-green-border: 2px solid #2f8544;
+  --brand-green-shadow: 4px 5px rgb(25, 68, 36);
+  --brand-green-shadow-small: 2px 3px rgb(25, 68, 36);
+  --brand-green-shadow-light: 4px 5px rgb(37, 94, 51);
   --brand-slate: #909fbd;
   --brand-green-tint: rgba(87, 201, 111, 0.13);
   --brand-green-tint-strong: rgba(87, 201, 111, 0.2);
@@ -71,6 +75,8 @@ body.theme-light {
   --dark-button-hover: var(--light-button-hover);
   --dark-shadow: var(--light-shadow);
   --dark-line: var(--light-line);
+
+  --brand-green-shadow: var(--brand-green-shadow-light);
 
   --card-bg: rgba(255, 255, 255, 0.92);
   --panel-soft: rgba(40, 49, 54, 0.04);
