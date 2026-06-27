@@ -25,6 +25,16 @@ async function move(id){
     }
 }
 
+async function moveBack(id){
+    let j = jobs.find(x => x.id === id);
+    let i = stages.indexOf(j.status);
+
+    if(i < 4){
+        j.status = stages[i - 1];
+        await save();
+    }
+}
+
 async function del(id){
     jobs = jobs.filter(x => x.id !== id);
     await save();
@@ -244,6 +254,10 @@ async function renderPlanner() {
 
                             <button class='button' onclick="move(${job.id})">
                                 ➡ Next
+                            </button>
+
+                            <button class='button' onclick="moveBack(${job.id})">
+                                ⬅ Prev
                             </button>
 
                             <button class='button' onclick="del(${job.id})">

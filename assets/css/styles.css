@@ -1201,7 +1201,7 @@ h3 {
 
   .quick-calc-bubble {
     right: 0.5rem;
-    top: 38rem;
+    top: 48rem;
     width: 38px;
     height: 38px;
     border-radius: 6px;
@@ -1210,7 +1210,7 @@ h3 {
 
   .quick-calc-panel {
     right: 0.5rem;
-    top: 6rem;
+    top: 12rem;
     width: min(calc(100vw - 1.5rem), 320px);
     padding: 0.8rem;
     border-radius: 8px;
