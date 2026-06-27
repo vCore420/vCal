@@ -18,6 +18,11 @@ async function move(id){
         j.status = stages[i + 1];
         await save();
     }
+
+    if(i >= 4){
+        jobs = jobs.filter(x => x.id !== id);
+        await save();
+    }
 }
 
 async function del(id){
@@ -65,6 +70,11 @@ async function addJob(){
         jobs.push({id:Date.now(), name:name.value, product:product.value==='Custom'?customProduct.value:product.value, colour:colour.value==='Custom'?customColour.value:colour.value, date:date.value, notes:notes.value, pdf:null, status:stages[0]});
         await save();
     }
+}
+
+function toggleJob(id){
+    const job = document.getElementById(`job-${id}`);
+    job.parentElement.classList.toggle("open");
 }
 
 async function renderPlanner() {
@@ -211,28 +221,35 @@ async function renderPlanner() {
             .forEach(job => {
                 column.innerHTML += `
                     <div class="planner-job">
-                        <b>👤 ${job.name}</b>
-                        <p>🪟 ${job.product}</p>
-                        <p>🎨 ${job.colour}</p>
-                        <p>📅 ${job.date || "No date"}</p>
-
-                        <div class="planner-small">
-                            ${job.notes}
+                        <div class="planner-job-header"
+                            onclick="toggleJob(${job.id})">
+                            <span>▶ 👤 ${job.name}</span>
                         </div>
-                        <div class="planner-actions">
+
+                        <div class="planner-job-details" id="job-${job.id}">
+                            <p>🪟 ${job.product}</p>
+                            <p>🎨 ${job.colour}</p>
+                            <p>📅 ${job.date || "No date"}</p>
+
+                            <div class="planner-small">
+                                ${job.notes}
+                            </div>
+
+                            <div class="planner-actions">
                             ${
                                 job.pdf
                                 ? `<button onclick="window.open('${job.pdf}')">📄 PDF</button>`
                                 : ""
                             }
 
-                            <button onclick="move(${job.id})">
+                            <button class='button' onclick="move(${job.id})">
                                 ➡ Next
                             </button>
 
-                            <button onclick="del(${job.id})">
+                            <button class='button' onclick="del(${job.id})">
                                 🗑 Delete
                             </button>
+                            </div>
                         </div>
                     </div>
                 `;

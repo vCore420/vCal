@@ -767,15 +767,27 @@ h3 {
     margin-top:20px;
 }
 
-.planner-input{
+.planner-input {
     width: 95%;
     padding: 4px;
     border-radius: 6px;
     border: var(--brand-green-border);
-    background: var(--card-bg);
-    color: var(--dark-text);
+    background: var(--field-bg);
+    color: var(--feild-text) !important;
     box-sizing: border-box;
     min-height: 60px; 
+}
+
+.planner-input::placeholder{
+    color: var(--feild-text);
+    opacity: 0.8;
+}
+
+.planner-input,
+.planner-input option{
+    color: var(--feild-text);
+    background: var(--feild-bg);
+    font-size: 1rem;
 }
 
 .planner-notes{
@@ -786,7 +798,8 @@ h3 {
 
 .planner-notes .planner-input{
     width:100%;
-    min-height: 80px; 
+    min-height: 80px;
+    font-size: 1rem; 
 }
 
 .planner-wrapper{
@@ -830,15 +843,25 @@ h3 {
     border:1px solid var(--border);
     border-left:6px solid var(--accent);
     border-radius:12px;
-    padding:14px;
+    padding: 2px;
     margin-bottom:12px;
     box-shadow:var(--shadow);
+    cursor: pointer;
 }
 
 /* Small Text */
 .planner-small{
     opacity:.8;
     font-size:.9rem;
+}
+
+.planner-job-details{
+    display: none;
+    margin-top: 10px;
+}
+
+.planner-job.open .planner-job-details{
+    display: block;
 }
 
 /* Buttons Row */
@@ -1178,7 +1201,7 @@ h3 {
 
   .quick-calc-bubble {
     right: 0.5rem;
-    top: 28rem;
+    top: 38rem;
     width: 38px;
     height: 38px;
     border-radius: 6px;
