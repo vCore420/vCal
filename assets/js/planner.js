@@ -1,6 +1,6 @@
 
 // WorkShop Planner
-const stages=['✂️ Cut Job','🟣 Ready For PC','🔵 At PC','🟢 Ready For Assembly','✅ Ready For Install'];
+const stages=['✂️ Cut Job','📦 Ready For PC','🎨 At PC','🛠️ Ready For Assembly','✔️ Ready For Install'];
 const classes=['cut','pc','atpc','assembly','install'];
 
 let jobs = [];
@@ -87,7 +87,7 @@ async function renderPlanner() {
         </div>
 
         <div id="dashboard" class="planner-dashboard"></div>
-        
+
         <div class="card">
             <h2>➕ Add New Job</h2>
             <div class="planner-form">
