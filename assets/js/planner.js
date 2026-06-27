@@ -3,28 +3,29 @@
 const stages=['✂️ Cut Job','🟣 Ready For PC','🔵 At PC','🟢 Ready For Assembly','✅ Ready For Install'];
 const classes=['cut','pc','atpc','assembly','install'];
 
-let jobs=JSON.parse(localStorage.getItem('vCalBoard'))||[];
+let jobs = [];
 
-function save(){
-    localStorage.setItem('vCalBoard',JSON.stringify(jobs));
-    renderPlanner();
+async function save(){
+    await savePlannerJobs(jobs);
+    await renderPlanner();
 }
 
-function move(id){
-    let j=jobs.find(x=>x.id===id);
-    let i=stages.indexOf(j.status);
-    if(i<4){
-        j.status=stages[i+1];
-        save();
+async function move(id){
+    let j = jobs.find(x => x.id === id);
+    let i = stages.indexOf(j.status);
+
+    if(i < 4){
+        j.status = stages[i + 1];
+        await save();
     }
 }
 
-function del(id){
-    jobs=jobs.filter(x=>x.id!==id);
-    save();
+async function del(id){
+    jobs = jobs.filter(x => x.id !== id);
+    await save();
 }
 
-function addJob(){
+async function addJob(){
     const name = document.getElementById("name");
     const product = document.getElementById("product");
     const colour = document.getElementById("colour");
@@ -39,7 +40,7 @@ function addJob(){
     const file = pdf.files[0];
     const reader = new FileReader();
 
-    reader.onload=()=>{
+    reader.onload = async () => {
         jobs.push({
             id:Date.now(),
             name:name.value,
@@ -55,18 +56,19 @@ function addJob(){
         date.value='';
         notes.value='';
         pdf.value='';
-        save();
+        await save();
     }
 
     if(file){
         reader.readAsDataURL(file);
     }else{
         jobs.push({id:Date.now(), name:name.value, product:product.value==='Custom'?customProduct.value:product.value, colour:colour.value==='Custom'?customColour.value:colour.value, date:date.value, notes:notes.value, pdf:null, status:stages[0]});
-        save();
+        await save();
     }
 }
 
-function renderPlanner() {
+async function renderPlanner() {
+    jobs = await getPlannerJobs();
     const logicContainer = document.getElementById("calculator-logic-container");
     logicContainer.innerHTML = `
     <div class="planner-container">
@@ -85,6 +87,7 @@ function renderPlanner() {
         </div>
 
         <div id="dashboard" class="planner-dashboard"></div>
+        
         <div class="card">
             <h2>➕ Add New Job</h2>
             <div class="planner-form">
@@ -95,8 +98,12 @@ function renderPlanner() {
                 <select id="product" class="planner-input">
                     <option>Crimsafe Door</option>
                     <option>Crimsafe Slider</option>
+                    <option>Crimsafe Angled Window</option>
+                    <option>Crimsafe Window</option>
                     <option>Lifestyle Door</option>
                     <option>Lifestyle Slider</option>
+                    <option>Lifestyle Angled Window</option>
+                    <option>Lifestyle Window</option>
                     <option>Angle</option>
                     <option>Custom</option>
                 </select>
@@ -106,13 +113,24 @@ function renderPlanner() {
                     class="planner-input"
                     placeholder="Custom Product">
                 <select id="colour" class="planner-input">
-                    <option>Black Matt</option>
+                    <option>Matt Black</option>
+                    <option>Appliance White</option>
+                    <option>Arctic White</option>
+                    <option>Off White</option>
                     <option>Ironsand</option>
                     <option>Flaxpod</option>
                     <option>Titania</option>
                     <option>Grey Friars</option>
                     <option>Sandstone Grey</option>
-                    <option>Appliance White</option>
+                    <option>Silver Pearl</option>
+                    <option>Electric Cow</option>
+                    <option>Karaka</option>
+                    <option>Perm Green</option>
+                    <option>Mid Bronze</option>
+                    <option>Slate Blue</option>
+                    <option>New Denim Blue</option>
+                    <option>Canvas Cloth</option>
+                    <option>Charcoal<option>
                     <option>Custom</option>
                 </select>
 
@@ -129,10 +147,14 @@ function renderPlanner() {
                     class="planner-input"
                     type="file"
                     accept=".pdf">
+            </div>
+
+            <div class="planner-notes">
                 <textarea
                     id="notes"
                     class="planner-input"
-                    placeholder="Notes"></textarea>
+                    placeholder="Notes">
+                </textarea>
             </div>
 
             <button id="add" class="button">
@@ -140,14 +162,16 @@ function renderPlanner() {
             </button>
         </div>
 
-        <input
-            id="search"
-            class="planner-search"
-            placeholder="🔍 Search customer names">
+        <div id='planner-wrapper' class='planner-wrapper'>
+            <input
+                id="search"
+                class="planner-search"
+                placeholder="🔍 Search customer names">
 
-        <div
-            id="board"
-            class="planner-board">
+            <div
+                id="board"
+                class="planner-board">
+            </div>
         </div>
     </div>
     `;

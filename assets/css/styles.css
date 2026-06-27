@@ -728,8 +728,13 @@ h3 {
 .planner-dashboard{
     display:grid; 
     grid-template-columns:repeat(5,1fr);
-    gap:14px;
-    margin:22px 0;
+    gap:10px;
+    margin-top: 6px;
+    margin-bottom: 28px;
+    max-width: 100%;
+    padding-left: 8%;
+    padding-right: 8%;
+    border-bottom: var(--brand-green-border-divider);
 }
 
 /* Dashboard Cards */
@@ -737,9 +742,11 @@ h3 {
     background: var(--card-bg);
     border: var(--brand-green-border);
     border-radius: 8px;
-    padding: 18px;
+    padding: 6px;
+    margin-bottom: 30px;
     text-align: center;
     box-shadow: var(--brand-green-shadow);
+    max-height: 140px;
 }
 
 /* Add Job Card */
@@ -754,34 +761,49 @@ h3 {
 
 /* Form */
 .planner-form{
-    display: inline-flex;
-    margin-top: 40px;
-    gap: 4px;
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:3px;
+    margin-top:20px;
 }
 
 .planner-input{
-    width: 90%;
+    width: 95%;
     padding: 4px;
     border-radius: 6px;
     border: var(--brand-green-border);
     background: var(--card-bg);
     color: var(--dark-text);
     box-sizing: border-box;
+    min-height: 60px; 
 }
 
-textarea.planner-input{
-    min-height: 60px;
+.planner-notes{
+    grid-column: 2 / 7;
+    width:85%;
+    padding-top: 4px;
+}
+
+.planner-notes .planner-input{
+    width:100%;
+    min-height: 80px; 
+}
+
+.planner-wrapper{
+    width: 100%;
+    margin-top: 34px;
+    padding-top: 16px;
+    border-top: var(--brand-green-border-divider);
 }
 
 /* Search */
 .planner-search{
     width: 50%;
     border: var(--brand-green-border);
-    box-shadow:var(--brand-green-shadow);
-    margin: 18px 0;
+    box-shadow:var(--brand-green-shadow-small);
+    margin-bottom: 18px;
     border-radius: 4px;
     min-height: 30px; 
-    margin-left: 25%;
 }
 
 /* Production Board */
@@ -789,6 +811,8 @@ textarea.planner-input{
     display:grid;
     grid-template-columns:repeat(5,1fr);
     gap:14px;
+    max-width: 95%;
+    padding-left: 3%;
 }
 
 /* Columns */

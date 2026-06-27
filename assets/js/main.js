@@ -165,6 +165,26 @@ async function buildCalculatorHistoryMarkup(calcKey) {
   );
 }
 
+// Planner Functions
+async function getPlannerJobs() {
+    const store = await readCalculatorHistoryStore();
+    return Array.isArray(store.plannerJobs)
+        ? store.plannerJobs
+        : [];
+}
+
+async function savePlannerJobs(jobs) {
+    const store = await readCalculatorHistoryStore();
+    store.plannerJobs = jobs;
+    await writeCalculatorHistoryStore(store);
+}
+
+async function clearPlannerJobs() {
+    const store = await readCalculatorHistoryStore();
+    store.plannerJobs = [];
+    await writeCalculatorHistoryStore(store);
+}
+
 function bindCalculatorHistoryEvents(calcKey, calc) {
   const historyHost = document.getElementById('calcHistoryHost');
   if (!historyHost) return;
