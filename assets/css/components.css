@@ -223,7 +223,7 @@ p {
 
 /* Custom Theme Switch */
 .theme-switch {
-  position: absolute;
+  position: fixed;
   top: 1em;
   right: 1em;
   width: 85px;
@@ -231,6 +231,7 @@ p {
   display: flex;
   align-items: center;
   cursor: pointer;
+  z-index: 14;
 }
 
 .theme-switch input[type="checkbox"] {

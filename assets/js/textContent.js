@@ -88,7 +88,18 @@ const textContent = {
         // ...add more calculators for Installer here
       ]
     },
-    
+    {
+      key: "workshop",
+      name: "Workshop Management",
+      preview: "Workshop production management.",
+      calculators: [
+        {
+            key: "planner",
+            name: "Workshop Production Board",
+            synopsis: "Track Jobs through the Workshop and Powdercoating Process. Build, Track and Reference Jobs."
+        }
+      ]
+    },
     // ----- Product Info -----
     {
       key: "product",

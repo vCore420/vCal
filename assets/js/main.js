@@ -736,6 +736,11 @@ async function openCalculator(calcKey) {
   const logicContainer = document.getElementById('calculator-logic-container');
   const calc = calculators[calcKey];
 
+  if (calcKey === "planner") {
+    renderPlanner();
+    return;
+  }
+
   if (!calc) {
     logicContainer.innerHTML = '<p>Calculator not found.</p>';
     return;

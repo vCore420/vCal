@@ -34,7 +34,7 @@
   /* Shared */
   --card-bg: rgba(45, 53, 59, 0.92);
   --panel-soft: rgba(255, 255, 255, 0.055);
-  --field-bg: rgba(248, 250, 249, 0.98);
+  --field-bg: rgb(248, 250, 249);
   --field-text: #283136;
   --field-border: #bcc6c1;
 

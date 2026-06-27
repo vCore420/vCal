@@ -562,6 +562,10 @@ body.theme-light .result-number {
   cursor: pointer;
 }
 
+.quick-calc-bubble:hover {
+  transform: translateY(-1px); 
+}
+
 .quick-calc-panel {
   position: fixed;
   right: 2rem;
@@ -666,6 +670,204 @@ body.theme-light .quick-calc-op {
 
 body.theme-light .quick-calc-equals {
   background: linear-gradient(180deg, rgba(62, 174, 88, 0.16) 0%, rgba(231, 221, 226, 0.18) 100%);
+}
+
+/* planner */
+.planner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 97%;
+  height: 100%;
+  padding:30px;
+  font-family: var(--font-family);
+  background:
+    radial-gradient(circle at top left, rgba(231, 221, 226, 0.12), transparent 22%),
+    radial-gradient(circle at top right, rgba(144, 159, 189, 0.14), transparent 24%),
+    radial-gradient(circle at bottom center, rgba(173, 132, 147, 0.08), transparent 28%),
+    var(--dark-bg);
+  background-image: radial-gradient(circle, var(--rose-tint) 1px, transparent 1.5px);
+  background-size: 24px 24px;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow-y:auto;
+}
+
+
+/* Header */
+.planner-header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    width: 100%
+}
+
+.planner-header-text{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align: center;
+}
+
+.planner-subtitle{
+    opacity:.8;
+    font-size:.9rem;
+}
+
+h3 {
+  font-size: 1.2rem;
+}
+
+/* Dashboard */
+.planner-dashboard{
+    display:grid; 
+    grid-template-columns:repeat(5,1fr);
+    gap:14px;
+    margin:22px 0;
+}
+
+/* Dashboard Cards */
+.planner-card{
+    background: var(--card-bg);
+    border: var(--brand-green-border);
+    border-radius: 8px;
+    padding: 18px;
+    text-align: center;
+    box-shadow: var(--brand-green-shadow);
+}
+
+/* Add Job Card */
+.planner-add-job{
+    background: var(--card-bg);
+    border: var(--brand-green-border);
+    border-radius: 8px;
+    padding: 18px;
+    box-shadow: var(--brand-green-shadow);
+    margin-bottom: 20px;
+}
+
+/* Form */
+.planner-form{
+    display: inline-flex;
+    margin-top: 40px;
+    gap: 4px;
+}
+
+.planner-input{
+    width: 90%;
+    padding: 4px;
+    border-radius: 6px;
+    border: var(--brand-green-border);
+    background: var(--card-bg);
+    color: var(--dark-text);
+    box-sizing: border-box;
+}
+
+textarea.planner-input{
+    min-height: 60px;
+}
+
+/* Search */
+.planner-search{
+    width: 50%;
+    border: var(--brand-green-border);
+    box-shadow:var(--brand-green-shadow);
+    margin: 18px 0;
+    border-radius: 4px;
+    min-height: 30px; 
+    margin-left: 25%;
+}
+
+/* Production Board */
+.planner-board{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:14px;
+}
+
+/* Columns */
+.planner-column{
+    padding: 14px;
+    border-radius: 8px;
+    min-height: 550px;
+    border: var(--brand-green-border);
+    box-shadow: var(--brand-green-shadow);
+}
+
+/* Jobs */
+.planner-job{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-left:6px solid var(--accent);
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:12px;
+    box-shadow:var(--shadow);
+}
+
+/* Small Text */
+.planner-small{
+    opacity:.8;
+    font-size:.9rem;
+}
+
+/* Buttons Row */
+.planner-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+
+/* Stage Colours */
+.cut{
+    background:#607d8b18;
+}
+
+.pc{
+    background:#9c27b018;
+}
+
+.atpc{
+    background:#2196f318;
+}
+
+.assembly{
+    background:#4caf5018;
+}
+
+.install{
+    background:#00968818;
+}
+
+
+/* Responsive */
+@media(max-width:1200px){
+
+    .planner-dashboard,
+    .planner-board{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+}
+
+@media(max-width:700px){
+
+    .planner-dashboard,
+    .planner-board{
+
+        grid-template-columns:1fr;
+
+    }
+
 }
 
 

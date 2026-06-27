@@ -910,5 +910,9 @@ const calculators = {
 
             return output;
         },
+        planner:{
+            title:"Workshop Production Board",
+            description:"Track jobs through production."
+        },
     },
 };
