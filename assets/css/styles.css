@@ -935,7 +935,7 @@ h3 {
   }
 
   .top-back-btn {
-    top: 2rem;
+    top: 1.4rem;
     left: 0.75rem;
     font-size: 0.78rem;
     padding: 0.3rem 0.4rem;
@@ -943,7 +943,7 @@ h3 {
   }
 
   .theme-switch {
-    top: 0.95rem;
+    top: 1.4rem;
     right: 0.75rem;
     width: 60px;
     height: 28px;
@@ -1100,7 +1100,7 @@ h3 {
 
   .radio-group label,
   .checkbox-group label {
-    width: 40%;
+    max-width: 90%;
     justify-content: space-between;
     padding: 0.7rem 0.55rem;
     font-size: 0.92rem;
@@ -1169,6 +1169,11 @@ h3 {
 
   .calc-history-title {
     font-size: 0.93rem;
+    padding-top: 10px;
+  }
+
+  .calc-history-time {
+    padding-bottom: 22px;
   }
 
   .calc-history-preview {
@@ -1202,7 +1207,7 @@ h3 {
 
   .quick-calc-bubble {
     right: 0.5rem;
-    top: 48rem;
+    top: 43rem;
     width: 38px;
     height: 38px;
     border-radius: 6px;
@@ -1211,7 +1216,7 @@ h3 {
 
   .quick-calc-panel {
     right: 0.5rem;
-    top: 12rem;
+    top: 22rem;
     width: min(calc(100vw - 1.5rem), 320px);
     padding: 0.8rem;
     border-radius: 8px;
