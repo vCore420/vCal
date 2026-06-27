@@ -1073,7 +1073,7 @@ const textContent = {
     back: "Back",
     copy: "Copy",
   },
-  finePrint: "Powered By © VCore. All Rights Reserved. v5.0"
+  finePrint: "Powered By © VCore. All Rights Reserved. v5.1"
   // Add more text as needed
 
 };

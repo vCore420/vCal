@@ -170,11 +170,7 @@ async function renderPlanner() {
             </div>
 
             <div class="planner-notes">
-                <textarea
-                    id="notes"
-                    class="planner-input"
-                    placeholder="Notes">
-                </textarea>
+                <textarea id="notes" class="planner-input" placeholder="Notes"></textarea>
             </div>
 
             <button id="add" class="button">
