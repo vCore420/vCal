@@ -547,13 +547,7 @@ body.theme-light .result-number {
   height: 56px;
   border: var(--brand-green-border);
   border-radius: 6px;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(231, 221, 226, 0.08) 0%,
-      rgba(255, 255, 255, 0.02) 100%
-    ),
-    var(--dark-banner);
+  background: var(--card-bg);
   color: var(--dark-text);
   box-shadow: var(--brand-green-shadow-small);
   font-size: 0.85rem;
@@ -928,7 +922,7 @@ h3 {
     max-height:500px;
     min-height:400px;
     overflow:hidden;
-    background:var(--field-bg);
+    background:var(--card-bg);
     border: var(--brand-green-border);
     box-shadow: var(--brand-green-shadow);
     border-radius:8px;
@@ -1143,6 +1137,15 @@ h3 {
       margin-top: 1px;
   }
 
+  .planner-search {
+    max-width: 95%;
+    margin-left: 8px;
+  }
+
+  .planner-note-section{
+      margin:8px 0;
+      font-size: 12px;
+  }
 }
 
 /* ----------- Responsive styles for vertical phone screens ----------- */

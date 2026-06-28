@@ -31,7 +31,7 @@ async function attachCalculatorToJob(calcKey, calc) {
 
     modal.innerHTML = `
         <div class="planner-picker-window">
-            <h2>📎 Attach Calculator Result</h2>
+            <h1>📎 Attach Calculator Result</h1>
 
             <input
                 id="plannerJobSearch"

@@ -33,7 +33,7 @@
   --slate-100: #f1f4f2;
 
   /* Shared */
-  --card-bg: rgba(45, 53, 59, 0.92);
+  --card-bg: rgb(45, 53, 59);
   --panel-soft: rgba(255, 255, 255, 0.055);
   --field-bg: rgb(248, 250, 249);
   --field-text: #283136;
@@ -79,7 +79,7 @@ body.theme-light {
 
   --brand-green-shadow: var(--brand-green-shadow-light);
 
-  --card-bg: rgba(255, 255, 255, 0.92);
+  --card-bg: rgb(245, 245, 245);
   --panel-soft: rgba(40, 49, 54, 0.04);
   --field-bg: #ffffff;
   --field-text: #283136;
