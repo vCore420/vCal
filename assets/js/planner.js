@@ -2,12 +2,26 @@
 // WorkShop Planner
 const stages=['✂️ Cut Job','📦 Ready For PC','🎨 At PC','🛠️ Ready For Assembly','✔️ Ready For Install'];
 const classes=['cut','pc','atpc','assembly','install'];
+const jobIcons = [
+    "🦊","🐼","🐸","🦉","🦝","🦀",
+    "🐧","🐢","🐙","🦋","🐝","🦜",
+    "🐬","🦕","🐿️","🦦","🦥","🦔",
+    "🐺","🐱","🐶","🐯","🦁","🐻",
+    "🛡️","⚔️","🏹","🧙","🧝","🧚",
+    "🐉","🦄","👑","💎","📜","🗝️",
+    "🏰","⚜️","🔮","✨","🌙","☀️",
+    "🦅","🧭","⚡","🔥","🔧","🔨",
+    "⚙️","🔩","📐","📏","🧰","🦺",
+    "🏗️","🚪","📦","🎨","🧪","🧱",
+    "🚚","⚡","🔥","💡"
+];
 
 let jobs = [];
+let searchQuery = "";
 
 async function save(){
     await savePlannerJobs(jobs);
-    await renderPlanner();
+    renderBoard();
 }
 
 async function move(id){
@@ -54,10 +68,12 @@ async function addJob(){
 
     const file = pdf.files[0];
     const reader = new FileReader();
+    const icon = jobIcons[Math.floor(Math.random() * jobIcons.length)];
 
     reader.onload = async () => {
         jobs.push({
             id:Date.now(),
+            icon: icon,
             name:name.value,
             product:product.value==='Custom'?customProduct.value:product.value,
             colour:colour.value==='Custom'?customColour.value:colour.value,date:date.value,
@@ -77,7 +93,16 @@ async function addJob(){
     if(file){
         reader.readAsDataURL(file);
     }else{
-        jobs.push({id:Date.now(), name:name.value, product:product.value==='Custom'?customProduct.value:product.value, colour:colour.value==='Custom'?customColour.value:colour.value, date:date.value, notes:notes.value, pdf:null, status:stages[0]});
+        jobs.push({
+            id:Date.now(), 
+            name:name.value, 
+            icon: icon, 
+            product:product.value==='Custom'?customProduct.value:product.value, 
+            colour:colour.value==='Custom'?customColour.value:colour.value, 
+            date:date.value, 
+            notes:notes.value, 
+            pdf:null, 
+            status:stages[0]});
         await save();
     }
 }
@@ -192,15 +217,25 @@ async function renderPlanner() {
     </div>
     `;
 
-    const dashboard = document.getElementById("dashboard");
-    const board = document.getElementById("board");
-
-    const search = document.getElementById("search");
-    const query = search.value.toLowerCase();
-
     document.getElementById("add").onclick = addJob;
     document.getElementById("return-btn").onclick = closeCalculator;
-    search.oninput = renderPlanner;
+
+    const search = document.getElementById("search");
+    search.value = searchQuery;
+
+    search.oninput = () => {
+        searchQuery = search.value.toLowerCase();
+        renderBoard();
+    };
+
+    renderBoard();
+
+}
+
+function renderBoard(){
+
+    const dashboard = document.getElementById("dashboard");
+    const board = document.getElementById("board");
 
     dashboard.innerHTML = "";
     board.innerHTML = "";
@@ -222,14 +257,14 @@ async function renderPlanner() {
         jobs
             .filter(j =>
                 j.status === stage &&
-                j.name.toLowerCase().includes(query)
+                j.name.toLowerCase().includes(searchQuery)
             )
             .forEach(job => {
                 column.innerHTML += `
                     <div class="planner-job">
                         <div class="planner-job-header"
                             onclick="toggleJob(${job.id})">
-                            <span>▶ 👤 ${job.name}</span>
+                            <span>▶ ${job.icon} ${job.name}</span>
                         </div>
 
                         <div class="planner-job-details" id="job-${job.id}">
@@ -266,4 +301,5 @@ async function renderPlanner() {
             });
         board.appendChild(column);
     });
+
 }
