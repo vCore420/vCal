@@ -24,6 +24,147 @@ async function save(){
     renderBoard();
 }
 
+async function attachCalculatorToJob(calcKey, calc) {
+    const jobs = await getPlannerJobs();
+    const modal = document.createElement("div");
+    modal.className = "planner-picker";
+
+    modal.innerHTML = `
+        <div class="planner-picker-window">
+            <h2>📎 Attach Calculator Result</h2>
+
+            <input
+                id="plannerJobSearch"
+                class="planner-search"
+                placeholder="Search jobs...">
+
+            <div id="plannerJobList"></div>
+
+            <button
+                class="button"
+                id="closePlannerPicker">
+                Cancel
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    function drawJobs(filter=""){
+        const list = modal.querySelector("#plannerJobList");
+        list.innerHTML="";
+        jobs.filter(job =>
+            job.name.toLowerCase().includes(filter.toLowerCase())
+        )
+        .forEach(job=>{
+            list.innerHTML += `
+                <button
+                    class="planner-job-select"
+                    data-id="${job.id}">
+                    ${job.icon} ${job.name}
+                </button>
+            `;
+        });
+        if (!list.innerHTML) {
+            list.innerHTML = `
+                <p style="text-align:center;padding:20px;opacity:.7;">
+                    No matching jobs found.
+                </p>
+            `;
+        }
+        list
+            .querySelectorAll(".planner-job-select")
+            .forEach(button => {
+
+                button.onclick = async () => {
+                    const jobId = Number(button.dataset.id);
+                    const selectedJob = jobs.find(j => j.id === jobId);
+
+                    if (!selectedJob) return;
+
+                    const snapshot = readCalculatorInputSnapshot(calc);
+                    const result = getCopyableResultText();
+
+                    let note = `
+                    <div class="planner-note-calculation">
+                        <div class="planner-note-header">
+                            📐 <strong>${calc.title}</strong>
+                        </div>
+                        <div class="planner-note-time">
+                            🕒 ${new Date().toLocaleString()}
+                        </div>
+                        <hr>
+                        <div class="planner-note-section">
+                            <strong>📥 INPUTS</strong>
+                    `;
+
+                    calc.inputs.forEach(input => {
+                        const value = snapshot[input.id];
+                        if (
+                            value === "" ||
+                            value === null ||
+                            value === undefined
+                        ) return;
+
+                        let label = input.label
+                            .replace(/^Enter\s+/i, "")
+                            .replace(/:+$/, "")
+                            .trim();
+
+                        note += `
+                            <div class="planner-note-row">
+                                <span>${label}</span>
+                                <strong>${value}</strong>
+                            </div>
+                        `;
+                    });
+
+                    note += `
+                        </div>
+                        <hr>
+                        <div class="planner-note-section">
+                            <strong>📤 RESULTS</strong>
+                    `;
+
+                    result.split("\n").forEach(line => {
+                        if (!line.trim()) return;
+                        note += `
+                            <div class="planner-note-result">
+                                ✔ ${line}
+                            </div>
+                        `;
+                    });
+
+                    note += `
+                        </div>
+
+                    </div>
+                    `;
+
+                    selectedJob.notes = selectedJob.notes
+                        ? selectedJob.notes + "\n\n" + note
+                        : note;
+                    await savePlannerJobs(jobs);
+                    modal.remove();
+                };
+            });
+    }
+    drawJobs();
+    modal
+        .querySelector("#plannerJobSearch")
+        .addEventListener("input", e => {
+
+            drawJobs(e.target.value);
+
+        });
+    modal
+        .querySelector("#closePlannerPicker")
+        .onclick = () => {
+
+            modal.remove();
+
+        };
+}
+
 async function move(id){
     let j = jobs.find(x => x.id === id);
     let i = stages.indexOf(j.status);

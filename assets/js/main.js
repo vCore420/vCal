@@ -842,7 +842,8 @@ async function openCalculator(calcKey) {
       '<button type="button" class="button" id="calcRunBtn">Calculate</button>' +
     '</form>' +
     '<div class="calc-result-actions">' +
-      '<button type="button" class="button calc-copy-btn" id="calcCopyBtn">Copy Result</button>' +
+        '<button type="button" class="button calc-copy-btn" id="calcCopyBtn">Copy Result</button>' +
+        '<button type="button" class="button" id="attachJobBtn">📎 Attach to Job</button>' +
     '</div>' +
     '<div id="calcResult"></div>' +
     '<div id="calcHistoryHost"></div>';
@@ -995,6 +996,10 @@ async function openCalculator(calcKey) {
       }
     };
   }
+
+  document.getElementById("attachJobBtn").onclick = function () {
+      attachCalculatorToJob(calcKey, calc);
+  };
 
   document.getElementById('calcRunBtn').onclick = function() {
     const inputSnapshot = readCalculatorInputSnapshot(calc);
