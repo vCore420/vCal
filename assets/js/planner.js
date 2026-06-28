@@ -108,7 +108,7 @@ async function renderPlanner() {
 
         <div id="dashboard" class="planner-dashboard"></div>
 
-        <div class="card">
+        <div class="planner-add-job">
             <h2>➕ Add New Job</h2>
             <div class="planner-form">
                 <input
