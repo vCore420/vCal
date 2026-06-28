@@ -982,7 +982,7 @@ h3 {
       gap: 0px;
       margin-bottom: 2px;
       margin-top: 58px;
-      width: 95%
+      width: 95%; 
   }
 
   .planner-subtitle{
@@ -1501,7 +1501,8 @@ h3 {
       gap: 0px;
       margin-bottom: 2px;
       margin-top: 52px;
-      width: 95%
+      width: 95%;
+      font-weight: 400;
   }
 
   .planner-subtitle{
@@ -1655,5 +1656,10 @@ h3 {
       gap:1px;
       flex-wrap:wrap;
       margin-top:2px;
+  }
+
+  .planner-search {
+    max-width: 95%;
+    margin-left: 3px;
   }
 }
