@@ -981,12 +981,12 @@ h3 {
   .planner-input option{
       color: var(--feild-text);
       background: var(--feild-bg);
-      font-size: 1.4rem;
+      font-size: 1.2rem;
   }
 
   .planner-notes{
       grid-column: 2 / 7;
-      width: 85%;
+      width: 90%;
       padding-top: 2px;
       padding-bottom: 8px;
   }
